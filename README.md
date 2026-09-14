@@ -2,9 +2,9 @@
 
 Marketing site for MediQ (home, privacy, terms).
 
-## Run locally
+## Quick start
 
-Requires Node.js 22+.
+Needs **Node.js 22+**.
 
 ```bash
 npm install
@@ -13,18 +13,24 @@ npm run dev
 
 Open http://localhost:3000
 
-## Host it
+## Deploy (host it)
 
-### Vercel (recommended)
+### Vercel (easiest)
 
-1. Go to [vercel.com/new](https://vercel.com/new) and import this repo.
-2. Set **Build Command** to `NITRO_PRESET=vercel npm run build`.
-3. Deploy.
+1. Import this repo at https://vercel.com/new
+2. Framework: Other
+3. Build command: `NITRO_PRESET=vercel npm run build`
+4. Deploy
+
+CLI:
+
+```bash
+npx vercel
+```
 
 ### Netlify
 
-1. Import the repo at [app.netlify.com](https://app.netlify.com).
-2. Build command: `NITRO_PRESET=netlify npm run build`
+Build command: `NITRO_PRESET=netlify npm run build`
 
 ### Any Node host (Railway, Render, VPS)
 
@@ -33,6 +39,8 @@ npm install
 npm run build
 npm start
 ```
+
+Listens on `PORT`.
 
 ## Pages
 

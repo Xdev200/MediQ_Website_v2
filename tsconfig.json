@@ -11,9 +11,7 @@
     "noEmit": true,
     "types": ["vite/client", "node"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    "paths": { "@/*": ["./src/*"] },
     "allowImportingTsExtensions": true
   },
   "include": ["src"]
