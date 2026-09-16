@@ -71,27 +71,3 @@ function Ring({ n, l, c }: { n: string; l: string; c: string }) {
     </div>
   );
 }
-
-export function OrbitField() {
-  const items = ["Health Connect", "Smartwatches", "Blood Pressure", "Glucometers"];
-  return (
-    <div className="relative mx-auto grid h-[280px] w-[280px] place-items-center overflow-visible">
-      {items.map((label, i) => (
-        <div
-          key={label}
-          className="orbit-spin absolute inset-0"
-          style={{ animationDelay: `${(-i * 7).toString()}s` }}
-        >
-          <span className="absolute top-0 left-1/2 -translate-x-1/2 rounded-pill border border-border bg-surface px-3 py-2 text-[13px] font-semibold shadow-card">
-            {label}
-          </span>
-        </div>
-      ))}
-      <div className="relative z-10 rounded-full bg-ink px-5 py-4 text-center text-sm font-semibold text-invert">
-        Unified
-        <br />
-        health profile
-      </div>
-    </div>
-  );
-}

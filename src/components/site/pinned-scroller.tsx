@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PhoneFrame } from "@/components/site/phone";
 
 const PANELS = [
   {
@@ -49,17 +50,24 @@ export function PinnedPhoneScroller() {
   const trackRef = useRef<HTMLElement>(null);
   const panelRefs = useRef<Array<HTMLElement | null>>([]);
   const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let raf = 0;
     const measure = () => {
       const line = window.innerHeight * 0.42;
       let idx = 0;
+      let prog = 0;
       panelRefs.current.forEach((el, i) => {
         if (!el) return;
-        if (el.getBoundingClientRect().top <= line) idx = i;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= line) {
+          idx = i;
+          prog = Math.min(1, Math.max(0, (line - rect.top) / rect.height));
+        }
       });
       setActive((prev) => (prev === idx ? prev : idx));
+      setProgress(prog);
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -89,7 +97,7 @@ export function PinnedPhoneScroller() {
       <div className="pointer-events-none sticky top-16 z-20 h-[calc(100svh-4rem)] lg:top-[4.75rem] lg:h-[calc(100vh-4.75rem)]">
         <div className="relative h-full w-full">
           <div className="absolute bottom-3 left-1/2 h-[min(560px,62svh)] w-[min(300px,78vw)] -translate-x-1/2 lg:top-[2%] lg:right-[3vw] lg:bottom-[2%] lg:left-auto lg:h-auto lg:w-[min(420px,36vw)] lg:translate-x-0">
-            <IPhone screen={active} />
+            <IPhone screen={active} progress={progress} />
           </div>
         </div>
       </div>
@@ -101,7 +109,11 @@ export function PinnedPhoneScroller() {
             ref={(el) => {
               panelRefs.current[i] = el;
             }}
-            className="relative flex w-full min-h-[100svh] flex-col justify-center px-6 pt-20 pb-[min(68svh,580px)] md:px-12 lg:px-[5vw] lg:pr-[44%] lg:pb-24"
+            className={cn(
+              "relative flex w-full min-h-[100svh] flex-col justify-center px-6 pt-20 pb-[min(68svh,580px)] md:px-12 lg:px-[5vw] lg:pb-24",
+              i > 0 && "rounded-t-[40px] shadow-[0_-24px_60px_rgba(0,0,0,0.12)]",
+              i < PANELS.length - 1 && "rounded-b-[40px]",
+            )}
             style={{ background: panel.bg }}
           >
             <div
@@ -132,25 +144,19 @@ export function PinnedPhoneScroller() {
   );
 }
 
-function IPhone({ screen }: { screen: number }) {
+function IPhone({ screen, progress }: { screen: number; progress: number }) {
   return (
-    <div className="relative h-full w-full">
-      <span className="absolute top-[18%] -left-[4px] h-8 w-[4px] rounded-l-sm bg-[#2b2c30]" />
-      <span className="absolute top-[28%] -left-[4px] h-14 w-[4px] rounded-l-sm bg-[#2b2c30]" />
-      <span className="absolute top-[38%] -left-[4px] h-14 w-[4px] rounded-l-sm bg-[#2b2c30]" />
-      <span className="absolute top-[30%] -right-[4px] h-20 w-[4px] rounded-r-sm bg-[#2b2c30]" />
-
-      <div className="h-full rounded-[54px] bg-[#0c0d10] p-[11px] shadow-device ring-1 ring-white/10">
-        <div className="relative h-full overflow-hidden rounded-[44px] bg-[#f4f5f8]">
-          <div className="absolute top-3 left-1/2 z-30 h-[34px] w-[118px] -translate-x-1/2 rounded-full bg-black" />
-          <StatusBar />
-          <ScreenChat show={screen === 0} />
-          <ScreenSources show={screen === 1} />
-          <ScreenExtras show={screen === 2} />
-          <div className="absolute bottom-2 left-1/2 z-30 h-[5px] w-32 -translate-x-1/2 rounded-full bg-black/80" />
-        </div>
-      </div>
-    </div>
+    <PhoneFrame className="h-full w-full">
+      <StatusBar />
+      <ScreenChat show={screen === 0} progress={screen === 0 ? progress : 0} />
+      <ScreenSources show={screen === 1} progress={screen === 1 ? progress : 0} />
+      <ScreenExtras show={screen === 2} progress={screen === 2 ? progress : 0} />
+      <span
+        key={screen}
+        className="scan-flourish pointer-events-none absolute inset-x-3 top-0 z-40 h-[3px] rounded-full bg-linear-to-r from-transparent via-primary-bright to-transparent opacity-0 blur-[1px]"
+      />
+      <div className="absolute bottom-2 left-1/2 z-30 h-[5px] w-32 -translate-x-1/2 rounded-full bg-black/80" />
+    </PhoneFrame>
   );
 }
 
@@ -180,11 +186,11 @@ function StatusBar() {
   );
 }
 
-function ScreenChat({ show }: { show: boolean }) {
+function ScreenChat({ show, progress }: { show: boolean; progress: number }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 flex flex-col pt-12 duration-150",
+        "absolute inset-0 flex flex-col pt-12",
         show ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >
@@ -202,40 +208,42 @@ function ScreenChat({ show }: { show: boolean }) {
       </header>
 
       <div className="flex-1 overflow-hidden px-4 pt-3">
-        <div className="ml-auto max-w-[82%] rounded-[18px] rounded-br-sm bg-[#7eb6ff] px-3.5 py-2.5 text-[13px] leading-snug font-medium text-white">
-          I'm feeling not rested today. What happened?
-        </div>
+        <div style={{ transform: `translateY(${-progress * 110}px)` }}>
+          <div className="ml-auto max-w-[82%] rounded-[18px] rounded-br-sm bg-[#7eb6ff] px-3.5 py-2.5 text-[13px] leading-snug font-medium text-white">
+            I'm feeling not rested today. What happened?
+          </div>
 
-        <p className="mt-4 text-[11px] font-medium text-muted">Thought for 16 seconds</p>
-        <ul className="mt-2 space-y-1.5 text-[12px] text-muted">
-          {[
-            { icon: Search, t: "Reviewing your recent recovery signals" },
-            { icon: FileText, t: "Analyzing sleep, strain, and HRV trends" },
-            { icon: FileText, t: "Preparing insights and possible causes" },
-            { icon: Search, t: "Looking for possible causes of fatigue" },
-            { icon: FileText, t: "Preparing insights and recommendations" },
-          ].map((row) => (
-            <li key={row.t} className="flex items-center gap-2">
-              <row.icon className="size-3.5 shrink-0 opacity-60" />
-              <span className="flex-1">{row.t}</span>
-              <ChevronRight className="size-3 opacity-40" />
+          <p className="mt-4 text-[11px] font-medium text-muted">Thought for 16 seconds</p>
+          <ul className="mt-2 space-y-1.5 text-[12px] text-muted">
+            {[
+              { icon: Search, t: "Reviewing your recent recovery signals" },
+              { icon: FileText, t: "Analyzing sleep, strain, and HRV trends" },
+              { icon: FileText, t: "Preparing insights and possible causes" },
+              { icon: Search, t: "Looking for possible causes of fatigue" },
+              { icon: FileText, t: "Preparing insights and recommendations" },
+            ].map((row) => (
+              <li key={row.t} className="flex items-center gap-2">
+                <row.icon className="size-3.5 shrink-0 opacity-60" />
+                <span className="flex-1">{row.t}</span>
+                <ChevronRight className="size-3 opacity-40" />
+              </li>
+            ))}
+            <li className="flex items-center gap-2 text-fg">
+              <Check className="size-3.5 text-success" />
+              Done
             </li>
-          ))}
-          <li className="flex items-center gap-2 text-fg">
-            <Check className="size-3.5 text-success" />
-            Done
-          </li>
-        </ul>
+          </ul>
 
-        <p className="mt-4 text-[13px] leading-relaxed font-normal text-fg">
-          Your recovery score is trending up. The 7h 20m of sleep you had last night significantly improved your HRV
-          baseline.
-        </p>
+          <p className="mt-4 text-[13px] leading-relaxed font-normal text-fg">
+            Your recovery score is trending up. The 7h 20m of sleep you had last night significantly improved your
+            HRV baseline.
+          </p>
 
-        <div className="mt-4 flex gap-3 text-muted">
-          <Copy className="size-4" />
-          <ThumbsUp className="size-4" />
-          <ThumbsDown className="size-4" />
+          <div className="mt-4 flex gap-3 pb-16 text-muted">
+            <Copy className="size-4" />
+            <ThumbsUp className="size-4" />
+            <ThumbsDown className="size-4" />
+          </div>
         </div>
       </div>
 
@@ -255,11 +263,12 @@ function ScreenChat({ show }: { show: boolean }) {
   );
 }
 
-function ScreenSources({ show }: { show: boolean }) {
+function ScreenSources({ show, progress }: { show: boolean; progress: number }) {
+  const sheetTop = 52 - progress * 16;
   return (
     <div
       className={cn(
-        "absolute inset-0 flex flex-col pt-12 duration-150",
+        "absolute inset-0 flex flex-col pt-12",
         show ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >
@@ -281,7 +290,10 @@ function ScreenSources({ show }: { show: boolean }) {
         responds best to. While you’re still getting recovery signals from 7h 20m of sleep.
       </div>
 
-      <div className="absolute inset-x-3 bottom-3 top-[36%] rounded-[28px] bg-white p-4 shadow-device">
+      <div
+        className="absolute inset-x-3 bottom-3 rounded-[28px] bg-white p-4 shadow-device"
+        style={{ top: `${sheetTop}%` }}
+      >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-fg/15" />
         <div className="mb-4 flex items-center justify-between">
           <span className="grid size-8 place-items-center rounded-full bg-card">
@@ -318,7 +330,7 @@ function ScreenSources({ show }: { show: boolean }) {
   );
 }
 
-function ScreenExtras({ show }: { show: boolean }) {
+function ScreenExtras({ show, progress }: { show: boolean; progress: number }) {
   const rows = [
     { icon: Activity, title: "Blood Glucose", meta: "92 mg/dL · fasting", color: "text-glucose bg-glucose/15" },
     { icon: Thermometer, title: "Body Temperature", meta: "36.6°C · baseline", color: "text-temp bg-temp/20" },
@@ -327,7 +339,7 @@ function ScreenExtras({ show }: { show: boolean }) {
   return (
     <div
       className={cn(
-        "absolute inset-0 flex flex-col bg-[#eef2f6] pt-12 duration-150",
+        "absolute inset-0 flex flex-col bg-[#eef2f6] pt-12",
         show ? "opacity-100" : "pointer-events-none opacity-0",
       )}
     >
@@ -335,21 +347,27 @@ function ScreenExtras({ show }: { show: boolean }) {
         <p className="text-[11px] font-semibold tracking-wide text-muted uppercase">Today</p>
         <h3 className="font-display mt-1 text-2xl font-extrabold">Every vital</h3>
       </header>
-      <div className="mt-4 flex-1 space-y-2.5 px-4">
-        {rows.map((r) => (
-          <div key={r.title} className="flex items-center gap-3 rounded-[22px] bg-white px-3 py-3 shadow-card">
-            <span className={cn("grid size-11 place-items-center rounded-[16px]", r.color)}>
-              <r.icon className="size-5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="text-[15px] font-semibold">{r.title}</div>
-              <div className="text-[12px] text-muted">{r.meta}</div>
+      <div className="mt-4 flex-1 overflow-hidden px-4">
+        <div
+          className="space-y-2.5"
+          style={{ transform: `translateY(${-progress * 90}px)` }}
+        >
+          {rows.map((r) => (
+            <div key={r.title} className="flex items-center gap-3 rounded-[22px] bg-white px-3 py-3 shadow-card">
+              <span className={cn("grid size-11 place-items-center rounded-[16px]", r.color)}>
+                <r.icon className="size-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-[15px] font-semibold">{r.title}</div>
+                <div className="text-[12px] text-muted">{r.meta}</div>
+              </div>
             </div>
+          ))}
+          <div className="flex items-center justify-between rounded-[22px] bg-white px-4 py-3 text-[13px] shadow-card">
+            <span className="text-muted">Device</span>
+            <span className="font-semibold">Health Connect ▾</span>
           </div>
-        ))}
-        <div className="flex items-center justify-between rounded-[22px] bg-white px-4 py-3 text-[13px] shadow-card">
-          <span className="text-muted">Device</span>
-          <span className="font-semibold">Health Connect ▾</span>
+          <div className="h-16" />
         </div>
       </div>
       <div className="px-4 pb-6">

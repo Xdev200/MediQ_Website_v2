@@ -4,10 +4,14 @@ import {
   Check,
   Download,
   Droplets,
+  Dumbbell,
+  Flame,
   Footprints,
   Heart,
+  HeartPulse,
   Moon,
   Salad,
+  Scale,
   Smartphone,
   Syringe,
   Thermometer,
@@ -24,6 +28,10 @@ export const metricIcons: Record<string, LucideIcon> = {
   glucose: Syringe,
   temp: Thermometer,
   oxygen: Wind,
+  bp: HeartPulse,
+  composition: Scale,
+  metabolic: Flame,
+  workout: Dumbbell,
 };
 
 export const stepIcons: Record<string, LucideIcon> = {

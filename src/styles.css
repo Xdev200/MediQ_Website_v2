@@ -22,6 +22,10 @@
   --color-cal: #ff7675;
   --color-oxy: #0984e3;
   --color-glucose: #6c5ce7;
+  --color-bp: #e17055;
+  --color-composition: #a29bfe;
+  --color-bmr: #fdcb6e;
+  --color-workout: #74b9ff;
   --color-wash: #eef2f8;
   --color-wash-lilac: #e7dcf6;
   --color-wash-blue: #dce8f6;
@@ -203,6 +207,33 @@
   }
 }
 
+@keyframes pulse-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  45% {
+    offset-distance: 50%;
+  }
+  55% {
+    offset-distance: 50%;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-travel 4.5s var(--ease-out-smooth) infinite;
+}
+
 @keyframes ring-fill {
   from {
     stroke-dashoffset: var(--ring-c);
@@ -226,15 +257,21 @@
 }
 
 @keyframes scan {
-  0%,
-  100% {
-    transform: translateY(-8px);
-    opacity: 0.2;
+  0% {
+    top: -4%;
+    opacity: 0;
   }
-  50% {
-    transform: translateY(72px);
+  15% {
     opacity: 1;
   }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.scan-flourish {
+  animation: scan 0.5s var(--ease-out-smooth) 1;
 }
 
 @keyframes orbit {

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Activity, Droplets, Flame, Footprints, Heart, Moon, Sparkles } from "lucide-react";
+import { PhoneFrame } from "@/components/site/phone";
 import { PLAY_STORE } from "@/lib/site";
+import { scrollToHash } from "@/lib/smooth-anchor";
 
 export function HeroStage() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -56,12 +58,18 @@ export function HeroStage() {
         <div className="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
           <a
             href="#download"
+            onClick={(e) => {
+              if (scrollToHash("#download")) e.preventDefault();
+            }}
             className="inline-flex min-h-12 items-center rounded-pill bg-ink px-7 py-3.5 text-base font-bold text-invert transition-transform duration-150 hover:bg-black active:scale-[0.96]"
           >
             Download Free
           </a>
           <a
             href="#features"
+            onClick={(e) => {
+              if (scrollToHash("#features")) e.preventDefault();
+            }}
             className="inline-flex min-h-12 items-center rounded-pill border border-border bg-surface/70 px-7 py-3.5 text-base font-semibold backdrop-blur"
           >
             Explore Features
@@ -74,9 +82,10 @@ export function HeroStage() {
       </div>
 
       <div
-        className="relative z-20 mx-auto mt-6 h-[560px] w-full max-w-[980px]"
+        className="relative z-20 mx-auto mt-6 h-[620px] w-full max-w-[980px] md:h-[680px]"
         style={{ transform: `translateY(${lift}px) scale(${scale})`, transformOrigin: "center top" }}
       >
+        <FlowPulse />
         <Phone />
         <Watch />
         <Chips />
@@ -104,53 +113,53 @@ function Phone() {
   const c = 2 * Math.PI * 52;
   const offset = c * (1 - 0.84);
   return (
-    <div className="float-a absolute top-0 left-1/2 w-[280px] -translate-x-[62%] rounded-[44px] bg-ink p-2.5 shadow-device md:w-[310px]">
-      <div className="relative overflow-hidden rounded-[36px] bg-linear-to-b from-[#d8eef8] to-bg">
-        <div className="absolute top-3 left-1/2 z-10 h-[22px] w-[108px] -translate-x-1/2 rounded-[12px] bg-black" />
-        <div className="px-4 pt-10 pb-5">
-          <div className="mb-3 flex items-center justify-between text-xs font-semibold">
-            <span>9:41</span>
-            <span className="opacity-60">LTE</span>
-          </div>
-          <div className="text-center">
-            <div className="text-sm font-semibold text-muted">Recovery</div>
-            <div className="text-xs text-muted">March 12, 2026</div>
-            <svg viewBox="0 0 140 140" className="mx-auto mt-2 size-36">
-              <circle cx="70" cy="70" r="52" fill="none" stroke="rgba(31,32,37,0.1)" strokeWidth="10" />
-              <circle
-                cx="70"
-                cy="70"
-                r="52"
-                fill="none"
-                stroke="var(--color-success)"
-                strokeWidth="10"
-                strokeLinecap="round"
-                transform="rotate(-90 70 70)"
-                className="ring-anim"
-                style={{
-                  ["--ring-c" as string]: String(c),
-                  ["--ring-offset" as string]: String(offset),
-                  strokeDasharray: c,
-                }}
-              />
-              <text x="70" y="68" textAnchor="middle" className="fill-fg" style={{ fontSize: 28, fontWeight: 800 }}>
-                84
-              </text>
-              <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 11, fontWeight: 600 }}>
-                Good
-              </text>
-            </svg>
-          </div>
-          <div className="mt-1 grid grid-cols-2 gap-2">
-            <Mini label="Sleep" value="7h 20m" />
-            <Mini label="Steps" value="6,240" />
-          </div>
-          <p className="mt-3 rounded-md bg-surface/80 p-3 text-[12px] leading-snug font-normal text-muted">
-            The 7h 20m of sleep you had last night significantly improved your HRV baseline.
-          </p>
+    <PhoneFrame
+      className="float-a absolute top-0 left-1/2 aspect-[9/19.5] w-[280px] -translate-x-[62%] shadow-device md:w-[310px]"
+      screenClassName="bg-linear-to-b from-[#d8eef8] to-bg"
+    >
+      <div className="px-4 pt-12 pb-5">
+        <div className="mb-3 flex items-center justify-between text-xs font-semibold">
+          <span>9:41</span>
+          <span className="opacity-60">LTE</span>
         </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-muted">Recovery</div>
+          <div className="text-xs text-muted">March 12, 2026</div>
+          <svg viewBox="0 0 140 140" className="mx-auto mt-2 size-36">
+            <circle cx="70" cy="70" r="52" fill="none" stroke="rgba(31,32,37,0.1)" strokeWidth="10" />
+            <circle
+              cx="70"
+              cy="70"
+              r="52"
+              fill="none"
+              stroke="var(--color-success)"
+              strokeWidth="10"
+              strokeLinecap="round"
+              transform="rotate(-90 70 70)"
+              className="ring-anim"
+              style={{
+                ["--ring-c" as string]: String(c),
+                ["--ring-offset" as string]: String(offset),
+                strokeDasharray: c,
+              }}
+            />
+            <text x="70" y="68" textAnchor="middle" className="fill-fg" style={{ fontSize: 28, fontWeight: 800 }}>
+              84
+            </text>
+            <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 11, fontWeight: 600 }}>
+              Good
+            </text>
+          </svg>
+        </div>
+        <div className="mt-1 grid grid-cols-2 gap-2">
+          <Mini label="Sleep" value="7h 20m" />
+          <Mini label="Steps" value="6,240" />
+        </div>
+        <p className="mt-3 rounded-md bg-surface/80 p-3 text-[12px] leading-snug font-normal text-muted">
+          The 7h 20m of sleep you had last night significantly improved your HRV baseline.
+        </p>
       </div>
-    </div>
+    </PhoneFrame>
   );
 }
 
@@ -303,5 +312,21 @@ function Chips() {
         <Activity className="size-3.5 text-hrv" /> HRV trending up
       </div>
     </>
+  );
+}
+
+const FLOW_PATH = "M245,391 C340,350 400,300 449,270 S650,150 725,137";
+
+function FlowPulse() {
+  return (
+    <svg
+      viewBox="0 0 980 680"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-0 hidden lg:block"
+      aria-hidden
+    >
+      <path d={FLOW_PATH} fill="none" stroke="var(--color-primary)" strokeOpacity="0.2" strokeWidth="2" strokeDasharray="6 8" />
+      <circle r="5" fill="var(--color-primary-bright)" className="pulse-dot" style={{ offsetPath: `path("${FLOW_PATH}")` }} />
+    </svg>
   );
 }

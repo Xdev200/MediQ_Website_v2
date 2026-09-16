@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import type { MouseEvent } from "react";
 import { SUPPORT_EMAIL } from "@/lib/site";
+import { scrollToHash } from "@/lib/smooth-anchor";
+
+function onHashClick(e: MouseEvent<HTMLAnchorElement>, href: string) {
+  if (scrollToHash(href)) e.preventDefault();
+}
 
 export function SiteFooter() {
   return (
@@ -16,22 +22,22 @@ export function SiteFooter() {
           <h2 className="mb-4 font-display text-[13px] font-bold tracking-[0.08em] text-muted uppercase">Product</h2>
           <ul className="flex flex-col gap-2.5 text-[15px] font-normal">
             <li>
-              <a href="/#metrics" className="hover:text-muted">
+              <a href="/#metrics" onClick={(e) => onHashClick(e, "/#metrics")} className="hover:text-muted">
                 Metrics
               </a>
             </li>
             <li>
-              <a href="/#features" className="hover:text-muted">
+              <a href="/#features" onClick={(e) => onHashClick(e, "/#features")} className="hover:text-muted">
                 Features
               </a>
             </li>
             <li>
-              <a href="/#how-it-works" className="hover:text-muted">
+              <a href="/#how-it-works" onClick={(e) => onHashClick(e, "/#how-it-works")} className="hover:text-muted">
                 How It Works
               </a>
             </li>
             <li>
-              <a href="/#download" className="hover:text-muted">
+              <a href="/#download" onClick={(e) => onHashClick(e, "/#download")} className="hover:text-muted">
                 Download
               </a>
             </li>
@@ -43,22 +49,22 @@ export function SiteFooter() {
           </h2>
           <ul className="flex flex-col gap-2.5 text-[15px] font-normal">
             <li>
-              <a href="/#metrics" className="hover:text-muted">
+              <a href="/#metrics" onClick={(e) => onHashClick(e, "/#metrics")} className="hover:text-muted">
                 Vitals
               </a>
             </li>
             <li>
-              <a href="/#features" className="hover:text-muted">
+              <a href="/#features" onClick={(e) => onHashClick(e, "/#features")} className="hover:text-muted">
                 Nutrition
               </a>
             </li>
             <li>
-              <a href="/#features" className="hover:text-muted">
+              <a href="/#features" onClick={(e) => onHashClick(e, "/#features")} className="hover:text-muted">
                 Sleep
               </a>
             </li>
             <li>
-              <a href="/#features" className="hover:text-muted">
+              <a href="/#features" onClick={(e) => onHashClick(e, "/#features")} className="hover:text-muted">
                 Activity
               </a>
             </li>
