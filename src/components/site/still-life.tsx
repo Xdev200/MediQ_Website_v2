@@ -8,7 +8,7 @@ export function StillLife() {
         Join thousands of users who have transformed how they track and understand their bodies.
       </p>
       <a
-        href={PLAY_STORE}
+        href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en"
         target="_blank"
         rel="noreferrer"
         className="mt-8 inline-flex min-h-12 items-center rounded-pill bg-ink px-8 py-3.5 text-base font-bold text-invert hover:bg-black"
@@ -18,22 +18,22 @@ export function StillLife() {
 
       <div className="relative mx-auto mt-12 h-[420px] max-w-5xl">
         <img
-          src="/media/earbuds.jpg"
+          src="/media/sleep_tracking.png"
           alt=""
           className="float-b absolute top-8 left-[4%] hidden h-40 w-28 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/citrus.jpg"
+          src="/media/hydration.png"
           alt=""
           className="float-a absolute top-4 right-[8%] hidden h-36 w-28 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/trail.jpg"
+          src="/media/lab.png"
           alt=""
           className="float-b absolute bottom-6 left-[10%] hidden h-32 w-40 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/breakfast.jpg"
+          src="/media/diet.png"
           alt=""
           className="float-a absolute right-[6%] bottom-8 hidden h-36 w-28 rounded-lg object-cover shadow-card md:block"
         />
@@ -68,30 +68,6 @@ function Ring({ n, l, c }: { n: string; l: string; c: string }) {
         <span className="font-display text-sm font-bold">{n}</span>
       </div>
       <div className="mt-1 text-[10px] text-muted">{l}</div>
-    </div>
-  );
-}
-
-export function OrbitField() {
-  const items = ["Health Connect", "Smartwatches", "Blood Pressure", "Glucometers"];
-  return (
-    <div className="relative mx-auto grid h-[280px] w-[280px] place-items-center overflow-visible">
-      {items.map((label, i) => (
-        <div
-          key={label}
-          className="orbit-spin absolute inset-0"
-          style={{ animationDelay: `${(-i * 7).toString()}s` }}
-        >
-          <span className="absolute top-0 left-1/2 -translate-x-1/2 rounded-pill border border-border bg-surface px-3 py-2 text-[13px] font-semibold shadow-card">
-            {label}
-          </span>
-        </div>
-      ))}
-      <div className="relative z-10 rounded-full bg-ink px-5 py-4 text-center text-sm font-semibold text-invert">
-        Unified
-        <br />
-        health profile
-      </div>
     </div>
   );
 }

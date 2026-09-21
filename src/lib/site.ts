@@ -3,7 +3,7 @@ export const PLAY_STORE =
 export const SUPPORT_EMAIL = "taqnikin@gmail.com";
 
 export const NAV = [
-  { href: "/#metrics", label: "Metrics" },
+  // { href: "/#metrics", label: "Metrics" },
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How It Works" },
 ] as const;
@@ -57,24 +57,57 @@ export const METRICS = [
     color: "var(--color-oxy)",
     icon: "oxygen",
   },
+  {
+    name: "Blood Pressure",
+    desc: "Systolic and diastolic readings with long-term trend charts.",
+    color: "var(--color-bp)",
+    icon: "bp",
+  },
+  {
+    name: "Body Composition",
+    desc: "BMI, body fat, muscle mass, and weight tracked together.",
+    color: "var(--color-composition)",
+    icon: "composition",
+  },
+  {
+    name: "Metabolic Rate",
+    desc: "BMR and TDEE calculated from your data to guide your energy balance.",
+    color: "var(--color-bmr)",
+    icon: "metabolic",
+  },
+  {
+    name: "Workouts",
+    desc: "Log workouts and review your exercise history alongside every vital.",
+    color: "var(--color-workout)",
+    icon: "workout",
+  },
 ] as const;
 
 export const FEATURE_POINTS_NUTRITION = [
-  "Instant macro & calorie breakdown",
-  "Voice-powered recognition",
-  "Personalized dietary insights",
+  "Voice logging — no typing, no searching",
+  "1,000+ item Indian-cuisine food database, with AI estimation for anything new",
+  "Portion review with a full micronutrient breakdown",
+  "Reminders and weekly diet reports",
 ] as const;
 
 export const FEATURE_POINTS_INTEGRATION = [
-  "Android Health Connect sync",
-  "Wearable device compatibility",
-  "Manual entry for legacy devices",
+  "Android Health Connect & wearable sync",
+  "Cycle tracking built into your health profile",
+  "Waist tracking alongside weight",
+  "Passwordless sign-in with a one-time code",
 ] as const;
 
 export const FEATURE_POINTS_AI = [
   "Correlation analysis (e.g. sleep vs. HRV)",
   "Generative AI health summaries",
   "Predictive trend alerts",
+] as const;
+
+export const FEATURE_POINTS_METABOLIC = [
+  "Metabolic Score from your vitals, updated daily",
+  "Metabolic Age compared to your actual age",
+  "Goals built around your own data, not a template",
+  "Streaks, leaderboard & compliance reports",
 ] as const;
 
 export const STEPS = [

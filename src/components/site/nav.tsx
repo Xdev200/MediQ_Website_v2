@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Download, Menu, X } from "lucide-react";
 import { NAV } from "@/lib/site";
+import { scrollToHash } from "@/lib/smooth-anchor";
 import { cn } from "@/lib/utils";
 
 export function SiteNav() {
@@ -14,14 +15,20 @@ export function SiteNav() {
         aria-label="Primary"
       >
         <Link to="/" className="flex items-center gap-2 rounded-md px-2 py-1">
-          <img src="/icon.png" alt="" className="size-8 rounded-[10px]" />
+          {/* <img src="/icon.png" alt="" className="size-8 rounded-[10px]" /> */}
           <span className="font-display text-[1.05rem] font-extrabold tracking-tight">MediQ</span>
         </Link>
 
         <ul className="hidden items-center gap-6 md:flex">
           {NAV.map((item) => (
             <li key={item.href}>
-              <a href={item.href} className="text-[15px] font-medium text-muted transition-colors hover:text-fg">
+              <a
+                href={item.href}
+                onClick={(e) => {
+                  if (scrollToHash(item.href)) e.preventDefault();
+                }}
+                className="text-[15px] font-medium text-muted transition-colors hover:text-fg"
+              >
                 {item.label}
               </a>
             </li>
@@ -29,7 +36,8 @@ export function SiteNav() {
         </ul>
 
         <a
-          href="/#download"
+          href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en" target="_blank"
+          
           className="hidden items-center gap-2 rounded-pill bg-ink px-4 py-2 text-sm font-medium text-invert transition-colors hover:bg-black md:inline-flex"
         >
           <Download className="size-3.5" strokeWidth={2.4} />
@@ -59,7 +67,10 @@ export function SiteNav() {
               <a
                 href={item.href}
                 className="flex min-h-11 items-center rounded-md px-3 text-[15px] font-medium"
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  if (scrollToHash(item.href)) e.preventDefault();
+                  setOpen(false);
+                }}
               >
                 {item.label}
               </a>
@@ -69,7 +80,10 @@ export function SiteNav() {
             <a
               href="/#download"
               className="mt-2 flex min-h-11 items-center justify-center rounded-pill bg-ink text-sm font-medium text-invert"
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                if (scrollToHash("/#download")) e.preventDefault();
+                setOpen(false);
+              }}
             >
               Get the App
             </a>

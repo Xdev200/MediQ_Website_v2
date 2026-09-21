@@ -11,7 +11,8 @@
   --color-primary: #0607f9;
   --color-primary-bright: #3a3bfe;
   --color-border: color-mix(in oklab, #1f2025 12%, transparent);
-  --color-success: #31ce01;
+  /* --color-success: #31ce01; */
+  --color-success:#0607F9;
   --color-warning: #ff9500;
   --color-danger: #ba1a1a;
   --color-sleep: #8c7ae6;
@@ -22,6 +23,10 @@
   --color-cal: #ff7675;
   --color-oxy: #0984e3;
   --color-glucose: #6c5ce7;
+  --color-bp: #e17055;
+  --color-composition: #a29bfe;
+  --color-bmr: #fdcb6e;
+  --color-workout: #74b9ff;
   --color-wash: #eef2f8;
   --color-wash-lilac: #e7dcf6;
   --color-wash-blue: #dce8f6;
@@ -203,6 +208,55 @@
   }
 }
 
+/* Hero flow field: readings travelling into the device, insights travelling out.
+   The reference gets this look from baked video; we have no footage, so it is
+   drawn as SVG paths with a dot riding each one via offset-path. */
+@keyframes flow-travel {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.flow-dot {
+  offset-rotate: 0deg;
+  animation: flow-travel var(--flow-dur, 5s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+/* The global reduce block clamps duration rather than cancelling, which would leave
+   each dot parked at its path origin. Drop them and keep the static strands. */
+@media (prefers-reduced-motion: reduce) {
+  .flow-dot {
+    display: none;
+  }
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.flow-line {
+  animation: flow-dash 1.9s linear infinite;
+}
+
+/* Outbound strands drift the other way so the two directions stay legible. */
+.flow-line-out {
+  animation: flow-dash 1.9s linear infinite reverse;
+}
+
 @keyframes ring-fill {
   from {
     stroke-dashoffset: var(--ring-c);
@@ -226,29 +280,48 @@
 }
 
 @keyframes scan {
-  0%,
-  100% {
-    transform: translateY(-8px);
-    opacity: 0.2;
+  0% {
+    top: -4%;
+    opacity: 0;
   }
-  50% {
-    transform: translateY(72px);
+  15% {
     opacity: 1;
   }
-}
-
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
+  100% {
+    top: 100%;
+    opacity: 0;
   }
 }
 
-.orbit-spin {
-  animation: orbit 28s linear infinite;
+.scan-flourish {
+  animation: scan 0.5s var(--ease-out-smooth) 1;
 }
 
-.orbit-spin-rev {
-  animation: orbit 28s linear infinite reverse;
+@keyframes chart-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.chart-wipe {
+  animation: chart-wipe 1.5s var(--ease-out-smooth) 0.25s both;
+}
+
+@keyframes orbit-drift {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 9px));
+  }
+}
+
+.orbit-drift {
+  animation: orbit-drift 6.4s ease-in-out infinite;
 }
 
 @keyframes blob {

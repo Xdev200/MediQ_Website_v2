@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
+import type { MouseEvent } from "react";
 import { SUPPORT_EMAIL } from "@/lib/site";
+import { scrollToHash } from "@/lib/smooth-anchor";
+
+function onHashClick(e: MouseEvent<HTMLAnchorElement>, href: string) {
+  if (scrollToHash(href)) e.preventDefault();
+}
 
 export function SiteFooter() {
   return (
@@ -16,54 +22,23 @@ export function SiteFooter() {
           <h2 className="mb-4 font-display text-[13px] font-bold tracking-[0.08em] text-muted uppercase">Product</h2>
           <ul className="flex flex-col gap-2.5 text-[15px] font-normal">
             <li>
-              <a href="/#metrics" className="hover:text-muted">
-                Metrics
-              </a>
-            </li>
-            <li>
-              <a href="/#features" className="hover:text-muted">
+              <a href="/#features" onClick={(e) => onHashClick(e, "/#features")} className="hover:text-muted">
                 Features
               </a>
             </li>
             <li>
-              <a href="/#how-it-works" className="hover:text-muted">
+              <a href="/#how-it-works" onClick={(e) => onHashClick(e, "/#how-it-works")} className="hover:text-muted">
                 How It Works
               </a>
             </li>
             <li>
-              <a href="/#download" className="hover:text-muted">
+              <a href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en" target="_blank" className="hover:text-muted">
                 Download
               </a>
             </li>
           </ul>
         </div>
-        <div>
-          <h2 className="mb-4 font-display text-[13px] font-bold tracking-[0.08em] text-muted uppercase">
-            Health Tracking
-          </h2>
-          <ul className="flex flex-col gap-2.5 text-[15px] font-normal">
-            <li>
-              <a href="/#metrics" className="hover:text-muted">
-                Vitals
-              </a>
-            </li>
-            <li>
-              <a href="/#features" className="hover:text-muted">
-                Nutrition
-              </a>
-            </li>
-            <li>
-              <a href="/#features" className="hover:text-muted">
-                Sleep
-              </a>
-            </li>
-            <li>
-              <a href="/#features" className="hover:text-muted">
-                Activity
-              </a>
-            </li>
-          </ul>
-        </div>
+        
         <div>
           <h2 className="mb-4 font-display text-[13px] font-bold tracking-[0.08em] text-muted uppercase">Support</h2>
           <ul className="flex flex-col gap-2.5 text-[15px] font-normal">
@@ -86,16 +61,8 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto mt-12 max-w-5xl border-t border-border pt-7 text-[13px] font-normal text-muted">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start justify-center gap-4 sm:flex-row sm:items-center">
           <span>© 2026 MediQ. All rights reserved.</span>
-          <div className="flex gap-6">
-            <Link to="/privacy" className="hover:text-fg">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hover:text-fg">
-              Terms
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
