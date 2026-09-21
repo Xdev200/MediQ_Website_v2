@@ -11,7 +11,8 @@
   --color-primary: #0607f9;
   --color-primary-bright: #3a3bfe;
   --color-border: color-mix(in oklab, #1f2025 12%, transparent);
-  --color-success: #31ce01;
+  /* --color-success: #31ce01; */
+  --color-success:#0607F9;
   --color-warning: #ff9500;
   --color-danger: #ba1a1a;
   --color-sleep: #8c7ae6;
@@ -207,21 +208,18 @@
   }
 }
 
-@keyframes pulse-travel {
+/* Hero flow field: readings travelling into the device, insights travelling out.
+   The reference gets this look from baked video; we have no footage, so it is
+   drawn as SVG paths with a dot riding each one via offset-path. */
+@keyframes flow-travel {
   0% {
     offset-distance: 0%;
     opacity: 0;
   }
-  8% {
+  12% {
     opacity: 1;
   }
-  45% {
-    offset-distance: 50%;
-  }
-  55% {
-    offset-distance: 50%;
-  }
-  92% {
+  82% {
     opacity: 1;
   }
   100% {
@@ -230,8 +228,33 @@
   }
 }
 
-.pulse-dot {
-  animation: pulse-travel 4.5s var(--ease-out-smooth) infinite;
+.flow-dot {
+  offset-rotate: 0deg;
+  animation: flow-travel var(--flow-dur, 5s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+/* The global reduce block clamps duration rather than cancelling, which would leave
+   each dot parked at its path origin. Drop them and keep the static strands. */
+@media (prefers-reduced-motion: reduce) {
+  .flow-dot {
+    display: none;
+  }
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.flow-line {
+  animation: flow-dash 1.9s linear infinite;
+}
+
+/* Outbound strands drift the other way so the two directions stay legible. */
+.flow-line-out {
+  animation: flow-dash 1.9s linear infinite reverse;
 }
 
 @keyframes ring-fill {
@@ -274,18 +297,31 @@
   animation: scan 0.5s var(--ease-out-smooth) 1;
 }
 
-@keyframes orbit {
+@keyframes chart-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
   to {
-    transform: rotate(360deg);
+    clip-path: inset(0 0 0 0);
   }
 }
 
-.orbit-spin {
-  animation: orbit 28s linear infinite;
+.chart-wipe {
+  animation: chart-wipe 1.5s var(--ease-out-smooth) 0.25s both;
 }
 
-.orbit-spin-rev {
-  animation: orbit 28s linear infinite reverse;
+@keyframes orbit-drift {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, calc(-50% - 9px));
+  }
+}
+
+.orbit-drift {
+  animation: orbit-drift 6.4s ease-in-out infinite;
 }
 
 @keyframes blob {

@@ -15,7 +15,7 @@ export function SiteNav() {
         aria-label="Primary"
       >
         <Link to="/" className="flex items-center gap-2 rounded-md px-2 py-1">
-          <img src="/icon.png" alt="" className="size-8 rounded-[10px]" />
+          {/* <img src="/icon.png" alt="" className="size-8 rounded-[10px]" /> */}
           <span className="font-display text-[1.05rem] font-extrabold tracking-tight">MediQ</span>
         </Link>
 
@@ -36,10 +36,8 @@ export function SiteNav() {
         </ul>
 
         <a
-          href="/#download"
-          onClick={(e) => {
-            if (scrollToHash("/#download")) e.preventDefault();
-          }}
+          href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en" target="_blank"
+          
           className="hidden items-center gap-2 rounded-pill bg-ink px-4 py-2 text-sm font-medium text-invert transition-colors hover:bg-black md:inline-flex"
         >
           <Download className="size-3.5" strokeWidth={2.4} />

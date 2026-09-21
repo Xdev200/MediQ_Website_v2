@@ -1,26 +1,26 @@
 const TILES = [
   {
-    src: "/media/bike.jpg",
+    src: "/media/gym.png",
     alt: "Ride recovery",
     overlay: { title: "Activity", a: "6,240", al: "Steps", b: "84", bl: "Recovery" },
   },
   {
-    src: "/media/breakfast.jpg",
+    src: "/media/diet.png",
     alt: "Morning nutrition",
     overlay: { title: "Nutrition", a: "520", al: "kcal", b: "48g", bl: "Protein" },
   },
   {
-    src: "/media/trail.jpg",
+    src: "/media/lab.png",
     alt: "Outdoor training",
     overlay: { title: "Heart Rate", a: "58", al: "Resting", b: "92", bl: "HRV" },
   },
   {
-    src: "/media/citrus.jpg",
+    src: "/media/hydration.png",
     alt: "Hydration",
     overlay: { title: "Hydration", a: "1.2L", al: "Today", b: "2L", bl: "Goal" },
   },
   {
-    src: "/media/earbuds.jpg",
+    src: "/media/sleep_tracking.png",
     alt: "Recovery routine",
     overlay: { title: "Sleep", a: "7h 20m", al: "Duration", b: "Optimal", bl: "Quality" },
   },

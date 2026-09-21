@@ -1,18 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check } from "lucide-react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
-  IntegrationVisual,
   InsightsVisual,
+  IntegrationVisual,
   MetabolicVisual,
   NutritionVisual,
+  ORBIT_SCALE,
 } from "@/components/site/feature-visuals";
 import { SiteFooter } from "@/components/site/footer";
 import { PhotoMosaic, ScreenshotMarquee } from "@/components/site/gallery";
 import { HeroStage } from "@/components/site/hero-stage";
-import { metricIcons, stepIcons } from "@/components/site/icons";
+import { metricIcons } from "@/components/site/icons";
 import { Intelligence } from "@/components/site/intelligence";
 import { SiteNav } from "@/components/site/nav";
+import { PrivacyCore } from "@/components/site/privacy-core";
 import { PinnedPhoneScroller } from "@/components/site/pinned-scroller";
 import { StillLife } from "@/components/site/still-life";
 import {
@@ -21,7 +23,6 @@ import {
   FEATURE_POINTS_METABOLIC,
   FEATURE_POINTS_NUTRITION,
   METRICS,
-  STEPS,
 } from "@/lib/site";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -31,17 +32,17 @@ function Home() {
     <div className="min-h-screen bg-bg text-fg">
       <SiteNav />
       <HeroStage />
-      <Integrations />
-      <ScreenshotMarquee />
+      {/* <Integrations /> */}
+      <Loved />
+      {/* <ScreenshotMarquee /> */}
       {/* <Metrics /> */}
       {/* <DashboardCollage /> */}
       <Features />
-      <Intelligence />
+      {/* <Intelligence /> */}
       <PinnedPhoneScroller />
-      <HowItWorks />
-      <PrivacyBand />
-      <Loved />
-      <StillLife />
+      <PrivacyCore />
+      
+      {/* <StillLife /> */}
       <SiteFooter />
     </div>
   );
@@ -50,19 +51,11 @@ function Home() {
 function Integrations() {
   return (
     <section className="px-6 pt-16 pb-8 text-center">
-      <h2 className="font-display text-xl font-semibold">Works with</h2>
-      <div className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-8 gap-y-3 font-display text-lg font-semibold tracking-tight">
-        <span>Health Connect</span>
-        <span>Smartwatches</span>
-        <span>Blood Pressure</span>
-        <span>Glucometers</span>
-      </div>
       <h2 className="reveal mx-auto mt-16 max-w-3xl font-display text-[clamp(2rem,4vw,3.5rem)] font-extrabold">
-        Fourteen vitals, one dashboard
+        14 vitals, one dashboard
       </h2>
       <p className="mx-auto mt-4 max-w-xl text-lg font-normal text-muted">
-        Heart rate, HRV, blood pressure, sleep, and more — all trended over time. Sync with your existing wearables or
-        enter data manually.
+        Heart rate, HRV, blood pressure, sleep, and more — all trended over time. Sync with your existing wearables.
       </p>
     </section>
   );
@@ -211,6 +204,7 @@ function Features() {
         points={FEATURE_POINTS_AI}
         wash="from-wash to-wash-mint"
         visual={<InsightsVisual />}
+        visualHeight="h-auto"
       />
       <FeatureSlab
         eyebrow="Insights & Motivation"
@@ -219,6 +213,7 @@ function Features() {
         points={FEATURE_POINTS_METABOLIC}
         wash="from-wash to-wash-blue"
         visual={<MetabolicVisual />}
+        visualHeight="h-auto"
         reverse
       />
     </>
@@ -228,7 +223,7 @@ function Features() {
 function FeaturesIntro() {
   return (
     <section id="features" className="scroll-mt-24 bg-ink px-6 py-16 text-center text-invert">
-      <p className="mb-3 text-[13px] font-semibold tracking-[0.1em] text-primary-bright uppercase">
+      <p className="mb-3 text-[13px] font-semibold tracking-[0.1em] text-white/55 uppercase">
         Intelligent Features
       </p>
       <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-extrabold text-white">Beyond simple tracking</h2>
@@ -245,6 +240,8 @@ function FeatureSlab({
   visual,
   reverse,
   wide,
+  /** Slabs whose visual flows (rather than sitting absolutely inside a fixed box) pass "h-auto". */
+  visualHeight = "h-[420px] md:h-[560px]",
 }: {
   eyebrow: string;
   title: string;
@@ -254,6 +251,7 @@ function FeatureSlab({
   visual: ReactNode;
   reverse?: boolean;
   wide?: boolean;
+  visualHeight?: string;
 }) {
   return (
     <section className={`relative overflow-hidden border-t border-black/5 bg-linear-to-b px-6 py-24 md:py-32 ${wash}`}>
@@ -275,59 +273,12 @@ function FeatureSlab({
             ))}
           </ul>
         </div>
-        <div className="relative h-[420px] w-full md:h-[560px]">{visual}</div>
-      </div>
-    </section>
-  );
-}
-
-function HowItWorks() {
-  return (
-    <section id="how-it-works" className="scroll-mt-24 px-6 py-24">
-      <div className="mx-auto mb-14 max-w-2xl text-center">
-        <p className="mb-3 text-[13px] font-semibold tracking-[0.1em] text-muted uppercase">Onboarding</p>
-        <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-extrabold">Ready in minutes</h2>
-      </div>
-      <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s) => {
-          const Icon = stepIcons[s.icon];
-          return (
-            <article key={s.n} className="reveal relative overflow-hidden rounded-xl border border-border bg-surface p-8">
-              <span className="font-display absolute top-2 right-4 text-6xl font-extrabold text-fg/5">{s.n}</span>
-              <div className="mb-6 grid size-12 place-items-center rounded-md bg-primary/15 text-primary">
-                <Icon className="size-6" />
-              </div>
-              <h3 className="font-display text-xl font-bold">{s.title}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed font-normal text-muted">{s.desc}</p>
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function PrivacyBand() {
-  return (
-    <section className="px-6 pb-16">
-      <div className="relative mx-auto flex min-h-[420px] max-w-5xl flex-col items-center justify-end overflow-hidden rounded-[40px] bg-ink px-6 pt-16 pb-16 text-center text-white">
-        <svg viewBox="0 0 120 140" className="absolute top-10 h-36 w-32 text-white/80" aria-hidden>
-          <path
-            className="lock-shackle"
-            d="M36 58 V38 a24 24 0 0 1 48 0 v20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="10"
-            strokeLinecap="round"
-          />
-          <rect x="22" y="58" width="76" height="64" rx="14" fill="#2a3033" />
-          <circle cx="60" cy="88" r="8" fill="currentColor" />
-        </svg>
-        <h2 className="relative font-display text-[clamp(2rem,4vw,3.2rem)] font-extrabold">Data Storage and Security</h2>
-        <p className="relative mt-3 max-w-[40ch] text-lg font-normal text-white/65">
-          We do not sell or lease this data to advertisers or third-party brokers. Your health records can be stored
-          securely on your device.
-        </p>
+        <div
+          className={`relative w-full ${wide ? "h-[420px] md:h-[var(--orbit-scale)]" : visualHeight}`}
+          style={wide ? ({ "--orbit-scale": ORBIT_SCALE } as CSSProperties) : undefined}
+        >
+          {visual}
+        </div>
       </div>
     </section>
   );
@@ -335,7 +286,6 @@ function PrivacyBand() {
 
 function Loved() {
   const chips = [
-    "4.9/5 Average Rating",
     "Steps & Activity",
     "Sleep Stages",
     "Heart Rate",
@@ -346,7 +296,7 @@ function Loved() {
   ];
   const loop = [...chips, ...chips];
   return (
-    <section className="overflow-hidden pb-8">
+    <section className="overflow-hidden pb-8 mt-16 mb-16">
       <PhotoMosaic />
       <h2 className="px-6 text-center font-display text-[clamp(2rem,4vw,3rem)] font-extrabold">
         Track everything from sleep to nutrition

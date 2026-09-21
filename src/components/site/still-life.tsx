@@ -8,7 +8,7 @@ export function StillLife() {
         Join thousands of users who have transformed how they track and understand their bodies.
       </p>
       <a
-        href={PLAY_STORE}
+        href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en"
         target="_blank"
         rel="noreferrer"
         className="mt-8 inline-flex min-h-12 items-center rounded-pill bg-ink px-8 py-3.5 text-base font-bold text-invert hover:bg-black"
@@ -18,22 +18,22 @@ export function StillLife() {
 
       <div className="relative mx-auto mt-12 h-[420px] max-w-5xl">
         <img
-          src="/media/earbuds.jpg"
+          src="/media/sleep_tracking.png"
           alt=""
           className="float-b absolute top-8 left-[4%] hidden h-40 w-28 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/citrus.jpg"
+          src="/media/hydration.png"
           alt=""
           className="float-a absolute top-4 right-[8%] hidden h-36 w-28 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/trail.jpg"
+          src="/media/lab.png"
           alt=""
           className="float-b absolute bottom-6 left-[10%] hidden h-32 w-40 rounded-lg object-cover shadow-card md:block"
         />
         <img
-          src="/media/breakfast.jpg"
+          src="/media/diet.png"
           alt=""
           className="float-a absolute right-[6%] bottom-8 hidden h-36 w-28 rounded-lg object-cover shadow-card md:block"
         />

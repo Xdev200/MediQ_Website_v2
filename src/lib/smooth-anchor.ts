@@ -20,11 +20,15 @@ export function scrollToHash(href: string): boolean {
   const target = document.getElementById(id);
   if (!target) return false;
 
+  // Resolved to an absolute position rather than handed over as an element: Lenis
+  // mis-measures element targets when a scroll is already in flight, landing short.
+  const top = target.getBoundingClientRect().top + window.scrollY + NAV_OFFSET;
+
   const lenis = (window as Window & { __lenis?: LenisLike }).__lenis;
   if (lenis) {
-    lenis.scrollTo(target, { offset: NAV_OFFSET, duration: 1.2 });
+    lenis.scrollTo(top, { duration: 1.2 });
   } else {
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.scrollTo({ top, behavior: "smooth" });
   }
   return true;
 }

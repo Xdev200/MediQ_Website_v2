@@ -3,7 +3,7 @@ export const PLAY_STORE =
 export const SUPPORT_EMAIL = "taqnikin@gmail.com";
 
 export const NAV = [
-  { href: "/#metrics", label: "Metrics" },
+  // { href: "/#metrics", label: "Metrics" },
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How It Works" },
 ] as const;
