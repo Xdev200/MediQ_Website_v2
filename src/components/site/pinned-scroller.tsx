@@ -439,7 +439,7 @@ function IPhone({ screen }: { screen: ScreenKey }) {
   );
 }
 
-function StatusBar() {
+export function StatusBar() {
   return (
     <div className="absolute inset-x-0 top-0 z-20 flex h-12 items-end justify-between px-7 pb-1 text-[12px] font-semibold">
       <span>9:41</span>

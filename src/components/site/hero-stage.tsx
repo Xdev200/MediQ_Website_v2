@@ -1,7 +1,22 @@
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { Activity, Flame, Footprints, Moon, Sparkles, TrendingUp, UtensilsCrossed, Watch } from "lucide-react";
+import {
+  ChartColumn,
+  ChevronRight,
+  ClipboardList,
+  Flame,
+  House,
+  Moon,
+  PersonStanding,
+  Sparkles,
+  Target,
+  TrendingUp,
+  UserRound,
+  UtensilsCrossed,
+  Watch,
+} from "lucide-react";
 import { PhoneFrame } from "@/components/site/phone";
+import { StatusBar } from "@/components/site/pinned-scroller";
 
 /**
  * The hero has no scroll-linked motion: it simply scrolls away at 1:1, the way the
@@ -34,20 +49,36 @@ export function HeroStage() {
           <br className="hidden sm:inline" /> to stay fit.
         </h1>
         <p className="reveal mx-auto mt-4 max-w-[52ch] text-[clamp(1.05rem,1.6vw,1.5rem)] leading-[1.35] font-normal text-fg/60">
-          End-to-end tracking of every calorie in and out — meals, workouts, sleep and your wearables — turned into clear
-          recommendations on what to eat and how to move next.
+          Every calorie in and out — meals, workouts, sleep, wearables — turned into clear advice on what to do next.
         </p>
       </div>
 
       <Aurora />
 
-      {/* Sits just under the copy, and the offset tracks width rather than height: the
-          copy's own height is set by the h1 and lede clamps, which are vw-based, so a
-          vh offset drifted from 121px of gap on a short viewport to 223px on a tall
-          one. 14.3rem + 12.75vw follows the measured copy bottom (255px at 640 to
-          361px at 1440, where the clamps cap) and holds the gap near 56px. Mobile is
-          separate because the lede wraps to five lines there. */}
-      <div className="absolute inset-x-0 top-[22rem] z-20 mx-auto h-[756px] w-full max-w-[1100px] px-6 md:top-[clamp(20rem,14.3rem+12.75vw,26rem)]">
+      {/*
+        HOW TO MOVE THE DEVICE UP OR DOWN
+        ---------------------------------
+        One knob, two tracks. Edit the numbers below; nothing else depends on them.
+
+            sm and up:  clamp(17rem, 12.9rem + 11.6vw, 23.5rem)
+                              │         │                │
+                              │         │                └ ceiling, binds above ~1400px
+                              │         └ ramp, binds between ~610px and ~1400px
+                              └ floor, binds below ~610px
+            below sm:   19rem   (its own value: the lede wraps to three lines there)
+
+        To shift the device, change all three clamp numbers by the SAME amount, and
+        the mobile value to match. 1rem = 16px; smaller pulls it up, larger pushes it
+        down. Example — to close the gap by 16px:
+            clamp(16rem, 11.9rem + 11.6vw, 22.5rem)  and  top-[18rem]
+
+        Why a ramp and not one number: the copy's height is set by the h1 and lede
+        clamps, which are vw-based, so the copy bottom itself slides from 233px at
+        640 to 329px at 1440, where those clamps cap out. 12.9rem + 11.6vw follows
+        that line and holds the gap at ~48px across the range. A fixed value, or a vh
+        value, drifts — vh drifted from 121px of gap to 223px on a taller screen.
+      */}
+      <div className="absolute inset-x-0 top-[19rem] z-20 mx-auto h-[756px] w-full max-w-[1100px] px-6 sm:top-[clamp(17rem,12.9rem+11.6vw,23.5rem)]">
         <Phone />
         <FlowCards />
       </div>
@@ -107,107 +138,120 @@ function Aurora() {
 
 function Phone() {
   const c = 2 * Math.PI * 52;
-  const offset = c * (1 - 0.81);
+  const offset = c * (1 - 0.74);
   return (
     <PhoneFrame
       className="absolute top-0 left-1/2 z-20 aspect-[370/756] w-[min(370px,74vw)] -translate-x-1/2 shadow-device md:-translate-x-[62%]"
-      screenClassName="bg-linear-to-b from-[#d8eef8] to-bg"
+      screenClassName="bg-white"
     >
-      {/* Content fills the full device height — at 756px a short screen leaves an
-          obvious white void below the fold. */}
+      <StatusBar />
+      {/* The section clips the device at its bottom edge, so the order carries weight:
+          ring, totals and the three rows all have to land inside the visible upper two
+          thirds, and only the tab bar is allowed to bleed past it. */}
       <div className="flex h-full flex-col px-4 pt-12 pb-3">
-        <div className="mb-2 flex items-center justify-between text-xs font-semibold">
-          <span>9:41</span>
-          <span className="opacity-60">LTE</span>
+        <div className="flex items-center justify-between text-[12px] font-semibold">
+          {/* Spacers keep "Today" optically centred against the LTE label. */}
+          <span className="w-8" />
+          <span>Today</span>
+          <span className="w-8 text-right text-muted">LTE</span>
         </div>
 
-        <div className="text-center">
-          <div className="text-sm font-semibold text-muted">Energy balance</div>
-          <div className="text-xs text-muted">Today</div>
-          <svg viewBox="0 0 140 140" className="mx-auto mt-1 size-32">
-            <circle cx="70" cy="70" r="52" fill="none" stroke="rgba(31,32,37,0.1)" strokeWidth="10" />
-            <circle
-              cx="70"
-              cy="70"
-              r="52"
-              fill="none"
-              stroke="var(--color-success)"
-              strokeWidth="10"
-              strokeLinecap="round"
-              transform="rotate(-90 70 70)"
-              className="ring-anim"
-              style={{
-                ["--ring-c" as string]: String(c),
-                ["--ring-offset" as string]: String(offset),
-                strokeDasharray: c,
-              }}
-            />
-            <text x="70" y="68" textAnchor="middle" className="fill-fg" style={{ fontSize: 26, fontWeight: 800 }}>
-              −420
-            </text>
-            <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 10, fontWeight: 600 }}>
-              KCAL DEFICIT
-            </text>
-          </svg>
+        <svg viewBox="0 0 140 140" className="mx-auto mt-1 size-[132px]">
+          <circle cx="70" cy="70" r="52" fill="none" stroke="rgba(31,32,37,0.08)" strokeWidth="12" />
+          <circle
+            cx="70"
+            cy="70"
+            r="52"
+            fill="none"
+            stroke="var(--color-luxury)"
+            strokeWidth="12"
+            strokeLinecap="round"
+            transform="rotate(-90 70 70)"
+            className="ring-anim"
+            style={{
+              ["--ring-c" as string]: String(c),
+              ["--ring-offset" as string]: String(offset),
+              strokeDasharray: c,
+            }}
+          />
+          <text x="70" y="70" textAnchor="middle" className="fill-fg" style={{ fontSize: 27, fontWeight: 800 }}>
+            1,250
+          </text>
+          <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 11, fontWeight: 500 }}>
+            Cal left
+          </text>
+        </svg>
+
+        <div className="mt-2 grid grid-cols-3">
+          <Stat icon={UtensilsCrossed} tone="text-primary" value="1,350" label="Eaten" />
+          <Stat icon={Flame} tone="text-cal" value="450" label="Burned" />
+          <Stat icon={Target} tone="text-steps" value="1,800" label="Goal" />
         </div>
 
-        <div className="mt-1 grid grid-cols-2 gap-2">
-          <Mini label="Calories in" value="1,850" />
-          <Mini label="Calories out" value="2,270" />
+        <div className="mt-3 space-y-2">
+          <Row thumb="/media/diet.png" title="Meals" value="1,350 kcal" />
+          <Row icon={PersonStanding} tone="bg-steps/15 text-steps" title="Workouts" value="450 kcal" />
+          <Row icon={Moon} tone="bg-sleep/15 text-sleep" title="Sleep" value="7h 20m" />
         </div>
 
-        <p className="mt-2 rounded-md bg-surface/80 p-3 text-[12px] leading-snug font-normal text-muted">
-          You slept 7h 20m and recovered well — add 24g of protein at dinner and a 30-min zone 2 walk to hit today's
-          target.
-        </p>
-
-        <div className="mt-2 rounded-md bg-surface/80 p-3">
-          <div className="flex items-center justify-between text-[10px] font-semibold tracking-wide text-muted uppercase">
-            <span>This week</span>
-            <span className="text-success">6 of 7 on target</span>
-          </div>
-          <div className="mt-2 flex h-14 items-end gap-1.5">
-            {[32, 48, 38, 64, 45, 76, 100].map((h, i) => (
-              <div
-                key={i}
-                className={`flex-1 rounded-[3px] ${i === 6 ? "bg-success" : "bg-fg/15"}`}
-                style={{ height: `${h}%` }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          <Tile label="Sleep" value="7h 20m" tone="text-sleep" />
-          <Tile label="Steps" value="6,240" tone="text-steps" />
-          <Tile label="Protein" value="96g" tone="text-cal" />
-        </div>
-
-        <div className="mt-auto flex items-center justify-around pt-3 text-muted">
-          <Activity className="size-4 text-primary" />
-          <Moon className="size-4" />
-          <Flame className="size-4" />
-          <Footprints className="size-4" />
+        <div className="mt-auto grid grid-cols-4 pt-3 text-[10px] font-medium">
+          <Tab icon={House} label="Home" active />
+          <Tab icon={ChartColumn} label="Trends" />
+          <Tab icon={ClipboardList} label="Plan" />
+          <Tab icon={UserRound} label="Profile" />
         </div>
       </div>
     </PhoneFrame>
   );
 }
 
-function Mini({ label, value }: { label: string; value: string }) {
+function Stat({ icon: Icon, tone, value, label }: { icon: typeof Moon; tone: string; value: string; label: string }) {
   return (
-    <div className="rounded-md bg-surface/80 px-3 py-2">
-      <div className="text-[10px] font-semibold tracking-wide text-muted uppercase">{label}</div>
-      <div className="font-display text-base font-extrabold">{value}</div>
+    <div className="text-center">
+      <Icon className={`mx-auto size-[18px] ${tone}`} />
+      <div className="font-display mt-1 text-[17px] font-extrabold">{value}</div>
+      <div className="text-[11px] font-normal text-muted">{label}</div>
     </div>
   );
 }
 
-function Tile({ label, value, tone }: { label: string; value: string; tone: string }) {
+/** Meals carries a photo, the other two a tinted glyph — as in the reference. */
+function Row({
+  thumb,
+  icon: Icon,
+  tone,
+  title,
+  value,
+}: {
+  thumb?: string;
+  icon?: typeof Moon;
+  tone?: string;
+  title: string;
+  value: string;
+}) {
   return (
-    <div className="rounded-md bg-surface/80 px-2 py-2 text-center">
-      <div className="text-[9px] font-semibold tracking-wide text-muted uppercase">{label}</div>
-      <div className={`font-display text-sm font-extrabold ${tone}`}>{value}</div>
+    <div className="flex items-center gap-3 rounded-[14px] bg-[#f6f7f9] px-2.5 py-2">
+      {thumb ? (
+        <img src={thumb} alt="" className="size-9 shrink-0 rounded-[10px] object-cover" />
+      ) : (
+        <span className={`grid size-9 shrink-0 place-items-center rounded-[10px] ${tone}`}>
+          {Icon ? <Icon className="size-[18px]" /> : null}
+        </span>
+      )}
+      <span className="min-w-0 flex-1">
+        <span className="block text-[13px] font-semibold">{title}</span>
+        <span className="block text-[12px] font-normal text-muted">{value}</span>
+      </span>
+      <ChevronRight className="size-4 shrink-0 text-muted" />
+    </div>
+  );
+}
+
+function Tab({ icon: Icon, label, active }: { icon: typeof Moon; label: string; active?: boolean }) {
+  return (
+    <div className={`flex flex-col items-center gap-1 ${active ? "text-steps" : "text-muted/60"}`}>
+      <Icon className="size-[18px]" />
+      {label}
     </div>
   );
 }
@@ -327,9 +371,6 @@ function FlowCards() {
           />
         </Fragment>
       ))}
-      <div className="pointer-events-none absolute top-[6%] left-2 z-20 flex items-center gap-2 rounded-pill bg-surface/90 px-3 py-2 text-[12px] font-semibold shadow-card lg:hidden">
-        <Flame className="size-3.5 text-cal" /> 420 kcal under target
-      </div>
     </>
   );
 }
