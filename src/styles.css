@@ -11,8 +11,8 @@
   --color-primary: #0607f9;
   --color-primary-bright: #3a3bfe;
   --color-border: color-mix(in oklab, #1f2025 12%, transparent);
-  /* --color-success: #31ce01; */
-  --color-success:#0607F9;
+  --color-success: #31ce01;
+  --color-luxury:#0607F9;
   --color-warning: #ff9500;
   --color-danger: #ba1a1a;
   --color-sleep: #8c7ae6;
