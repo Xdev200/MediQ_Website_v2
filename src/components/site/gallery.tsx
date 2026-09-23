@@ -60,13 +60,15 @@ export function ScreenshotMarquee() {
 export function PhotoMosaic() {
   const imgs = TILES;
   return (
-    <div className="relative mx-auto mb-8 flex h-40 max-w-5xl items-end justify-center gap-3 overflow-hidden px-6">
+    /* pb-3 clears the +10px translate on the odd tiles: they are bottom-aligned, so
+       without it overflow-hidden shaves their lower edge. */
+    <div className="relative mx-auto mb-8 flex h-32 max-w-content items-end justify-center gap-2 overflow-hidden pb-3 sm:h-40 sm:gap-3 md:h-44">
       {imgs.map((t, i) => (
         <img
           key={t.src}
           src={t.src}
           alt=""
-          className="h-28 w-24 rounded-lg object-cover shadow-card sm:h-36 sm:w-28"
+          className="h-20 w-16 rounded-lg object-cover shadow-card sm:h-28 sm:w-24 md:h-36 md:w-28"
           style={{ transform: `translateY(${i % 2 === 0 ? -12 : 10}px)` }}
         />
       ))}

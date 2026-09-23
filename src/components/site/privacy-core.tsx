@@ -93,29 +93,27 @@ export function PrivacyCore() {
     <section
       ref={sectionRef}
       id="privacy"
-      className="scroll-mt-24 border-t border-black/5 bg-linear-to-b from-wash to-wash-blue px-6 py-24 md:py-32"
+      className="section scroll-mt-24 overflow-hidden border-t border-black/5 bg-linear-to-b from-wash to-wash-blue"
       style={{ "--lock": "1" } as CSSProperties}
     >
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="mb-3 text-[13px] font-bold tracking-[0.1em] text-primary uppercase">
-          Privacy &amp; Security
-        </p>
+      <div className="mx-auto max-w-narrow text-center">
+        <p className="eyebrow text-primary">Privacy &amp; Security</p>
         <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-extrabold">
           Your data, under lock
         </h2>
-        <p className="mx-auto mt-4 max-w-[42ch] text-lg leading-relaxed font-normal text-muted">
+        <p className="mx-auto mt-4 max-w-[46ch] text-lg leading-relaxed font-normal text-muted">
           Health records are the most personal data you have. Here is exactly
           how MediQ holds them — and how you take them back.
         </p>
       </div>
 
-      <div className="mx-auto mt-16 grid w-full max-w-[1200px] items-center gap-6 lg:grid-cols-[1fr_minmax(280px,360px)_1fr] lg:gap-10">
+      <div className="mx-auto mt-16 grid w-full max-w-content items-center gap-6 lg:grid-cols-[1fr_minmax(280px,360px)_1fr] lg:gap-10">
         <PillarColumn from={0} />
         <LockVisual />
         <PillarColumn from={2} />
       </div>
 
-      <div className="reveal mx-auto mt-14 flex max-w-3xl items-center justify-center gap-3 rounded-xl border border-border bg-surface/70 px-6 py-4 text-center backdrop-blur">
+      <div className="reveal mx-auto mt-14 flex max-w-narrow items-center justify-center gap-3 rounded-xl border border-border bg-surface/70 px-6 py-4 text-center backdrop-blur">
         <ShieldCheck className="size-5 shrink-0 text-primary" />
         <p className="text-[15px] font-medium text-fg">
           We do not sell or lease your data to advertisers or third-party
@@ -134,10 +132,10 @@ function PillarColumn({ from }: { from: 0 | 2 }) {
         return (
           <article
             key={pillar.title}
-            className="reveal flex-1 rounded-xl border border-border bg-surface p-6 transition-shadow duration-300 hover:shadow-card"
+            className="reveal flex-1 rounded-xl border border-border bg-surface p-6 text-center transition-shadow duration-300 hover:shadow-card sm:text-left"
             style={{ animationDelay: `${(from + i) * 90}ms` }}
           >
-            <div className="mb-5 grid size-11 place-items-center rounded-md bg-primary/15 text-primary">
+            <div className="mx-auto mb-5 grid size-11 place-items-center rounded-md bg-primary/15 text-primary sm:mx-0">
               <Icon className="size-5" />
             </div>
             <h3 className="font-display text-lg font-bold">{pillar.title}</h3>

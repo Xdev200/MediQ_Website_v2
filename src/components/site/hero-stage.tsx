@@ -1,73 +1,55 @@
-import { useEffect, useState } from "react";
-import { Activity, Droplets, Flame, Footprints, Heart, Moon, Sparkles } from "lucide-react";
+import { Fragment } from "react";
+import type { CSSProperties } from "react";
+import { Activity, Flame, Footprints, Moon, Sparkles, TrendingUp, UtensilsCrossed, Watch } from "lucide-react";
 import { PhoneFrame } from "@/components/site/phone";
-import { PLAY_STORE } from "@/lib/site";
-import { scrollToHash } from "@/lib/smooth-anchor";
 
 /**
  * The hero has no scroll-linked motion: it simply scrolls away at 1:1, the way the
  * reference does. The device is absolutely positioned so it bleeds past the section's
- * bottom edge and is clipped there, which keeps the section ~1.18vh tall instead of
- * letting a 756px device push it to 1.4vh.
+ * bottom edge and is clipped there, rather than letting a 756px device set the height.
+ *
+ * The height is capped as well as proportional: past ~930px of viewport the device can
+ * no longer reach the bottom edge, and the section would end in bare sky.
  */
 
 export function HeroStage() {
   return (
-    <header className="relative min-h-[118vh] overflow-hidden pt-24">
+    <header className="relative min-h-[min(118vh,1100px)] overflow-hidden pt-24">
       <img
         src="/media/sky.jpg"
         alt=""
-        className="sky-pan pointer-events-none absolute inset-0 h-full w-full object-cover"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] bg-linear-to-t from-bg via-bg/80 to-transparent"
       />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-        {/* <div className="reveal mb-6 inline-flex items-center gap-2 rounded-pill border border-fg/10 bg-surface/60 px-4 py-1.5 text-[12px] font-semibold tracking-[0.08em] text-muted uppercase backdrop-blur">
-          <Sparkles className="size-3.5" />
-          AI-Powered Health Coach
-        </div> */}
-        <h1 className="reveal font-display text-[clamp(2.35rem,5.4vw,4.75rem)] leading-[1] font-bold tracking-[-0.03em] text-balance">
-          Make sense of your
-          {/* Forcing the break below sm strands "your" on a line of its own. */}
-          <br className="hidden sm:inline" /> health data.
+      {/* Deliberately wider than --container-prose: at 76px the h1 wraps to three
+          lines inside the prose rail. Display type gets its own measure. */}
+      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+        <h1 className="reveal font-display text-[clamp(2.35rem,5.4vw,4.75rem)] leading-[1] font-extrabold tracking-[-0.03em] text-balance">
+          The only app you need
+          {/* Below sm the headline wraps on its own; forcing the break there strands "fit." */}
+          <br className="hidden sm:inline" /> to stay fit.
         </h1>
-        <p className="reveal mx-auto mt-4 max-w-[34rem] text-[clamp(1.05rem,1.6vw,1.5rem)] leading-[1.35] font-normal text-fg/60">
-          Turn your wearables, vitals, and lifestyle into recommendations you can act on.
+        <p className="reveal mx-auto mt-4 max-w-[52ch] text-[clamp(1.05rem,1.6vw,1.5rem)] leading-[1.35] font-normal text-fg/60">
+          End-to-end tracking of every calorie in and out — meals, workouts, sleep and your wearables — turned into clear
+          recommendations on what to eat and how to move next.
         </p>
-        <div className="reveal mt-6 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="https://play.google.com/store/apps/details?id=com.mediq.health&hl=en"
-            target="_blank"
-            className="inline-flex min-h-12 items-center rounded-pill bg-ink px-7 py-3.5 text-base font-bold text-invert transition-transform duration-150 hover:bg-black active:scale-[0.96]"
-          >
-            Download Free
-          </a>
-          <a
-            href="#features"
-            onClick={(e) => {
-              if (scrollToHash("#features")) e.preventDefault();
-            }}
-            className="inline-flex min-h-12 items-center rounded-pill border border-border bg-surface/70 px-7 py-3.5 text-base font-semibold backdrop-blur"
-          >
-            Explore Features
-          </a>
-        </div>
-        {/* <div className="reveal mt-5 flex items-center justify-center gap-2.5 text-[17px] font-medium text-fg/70">
-          <span className="tracking-widest text-warning">★★★★★</span>
-          <span>4.9/5 Average Rating</span>
-        </div> */}
       </div>
 
-      {/* Starts below the copy — the mobile offset is explicit because the stacked
-          copy block is far taller there than 58vh would allow for. */}
-      <div className="absolute inset-x-0 top-[620px] z-20 mx-auto h-[756px] w-full max-w-[1100px] px-6 md:top-[max(58vh,30rem)]">
-        <FlowField />
+      <Aurora />
+
+      {/* Sits just under the copy, and the offset tracks width rather than height: the
+          copy's own height is set by the h1 and lede clamps, which are vw-based, so a
+          vh offset drifted from 121px of gap on a short viewport to 223px on a tall
+          one. 14.3rem + 12.75vw follows the measured copy bottom (255px at 640 to
+          361px at 1440, where the clamps cap) and holds the gap near 56px. Mobile is
+          separate because the lede wraps to five lines there. */}
+      <div className="absolute inset-x-0 top-[22rem] z-20 mx-auto h-[756px] w-full max-w-[1100px] px-6 md:top-[clamp(20rem,14.3rem+12.75vw,26rem)]">
         <Phone />
-        {/* <Watch /> */}
-        <Chips />
+        <FlowCards />
       </div>
 
       {/* Sits above the device so it dissolves into the page at the hero's clip edge
@@ -76,103 +58,59 @@ export function HeroStage() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[15%] bg-linear-to-t from-bg via-bg/85 to-transparent"
       />
-
-      
     </header>
   );
 }
 
 /**
- * Readings converge on the device from the metric chips; a single strand leaves it
- * carrying the insight. Paths are authored in the stage's own 1100x756 space and
- * stretch with it (preserveAspectRatio="none") so they stay anchored to the chips,
- * which are positioned in percentages.
+ * The atmospheric layer, and the piece the old hero had no equivalent of. bevel gets
+ * this from a baked 6s video, so it can afford real light; we approximate it with a
+ * handful of very large, heavily blurred colour fields drifting vertically on long,
+ * mutually offset periods — the band order shifts the way theirs does, without
+ * anything hard-edged ever appearing.
+ *
+ * `filter: blur()` is the whole effect here, which is the one place the design
+ * system's no-blur rule cannot apply: their blur is baked into the footage.
+ *
+ * Bands sit in the lower half only, behind the cards and the device, above the sky.
  */
-const FLOW_IN = [
-  { d: "M-40,150 C90,165 210,182 314,206", dur: "5.2s", delay: "0s" },
-  { d: "M-40,332 C100,326 220,292 314,252", dur: "6.4s", delay: "1.4s" },
-  { d: "M1140,352 C1010,346 830,304 700,258", dur: "5.7s", delay: "2.6s" },
+const AURORA = [
+  { color: "var(--color-hrv)", top: "40%", h: "30%", o: 0.3, from: "10px", to: "-46px", dur: "52s", delay: "0s" },
+  { color: "var(--color-primary-bright)", top: "50%", h: "32%", o: 0.22, from: "-30px", to: "26px", dur: "64s", delay: "-8s" },
+  { color: "var(--color-sleep)", top: "60%", h: "28%", o: 0.2, from: "18px", to: "-34px", dur: "46s", delay: "-20s" },
+  { color: "var(--color-cal)", top: "68%", h: "26%", o: 0.18, from: "-22px", to: "30px", dur: "58s", delay: "-14s" },
 ] as const;
 
-/** Leaves clear of the watch so the dot is not born behind it. */
-const FLOW_OUT = [{ d: "M800,152 C900,122 1010,96 1140,70", dur: "4.8s", delay: "3.4s" }] as const;
-
-function FlowField() {
+function Aurora() {
   return (
-    <svg
-      viewBox="0 0 1100 756"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
-      aria-hidden
-    >
-      <defs>
-        <radialGradient id="flow-bloom" cx="50%" cy="34%" r="52%">
-          <stop offset="0%" stopColor="var(--color-primary-bright)" stopOpacity="0.16" />
-          <stop offset="60%" stopColor="var(--color-primary)" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="506" cy="200" rx="450" ry="190" fill="url(#flow-bloom)" />
-
-      {FLOW_IN.map((f) => (
-        <g key={f.d}>
-          <path
-            d={f.d}
-            fill="none"
-            stroke="var(--color-primary)"
-            strokeOpacity="0.45"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeDasharray="3 7"
-            className="flow-line"
-          />
-          <circle
-            r="5"
-            fill="var(--color-primary-bright)"
-            className="flow-dot"
-            style={{
-              offsetPath: `path("${f.d}")`,
-              ["--flow-dur" as string]: f.dur,
-              ["--flow-delay" as string]: f.delay,
-            }}
-          />
-        </g>
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+      {AURORA.map((b) => (
+        <div
+          key={b.color}
+          className="aurora-band absolute left-1/2 w-[150%] rounded-[50%]"
+          style={{
+            top: b.top,
+            height: b.h,
+            background: `radial-gradient(closest-side, ${b.color} 0%, color-mix(in oklab, ${b.color} 45%, transparent) 55%, transparent 100%)`,
+            opacity: b.o,
+            filter: "blur(70px)",
+            ["--aurora-from" as string]: b.from,
+            ["--aurora-to" as string]: b.to,
+            ["--aurora-dur" as string]: b.dur,
+            ["--aurora-delay" as string]: b.delay,
+          }}
+        />
       ))}
-
-      {FLOW_OUT.map((f) => (
-        <g key={f.d}>
-          <path
-            d={f.d}
-            fill="none"
-            stroke="var(--color-success)"
-            strokeOpacity="0.5"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeDasharray="3 7"
-            className="flow-line-out"
-          />
-          <circle
-            r="5.5"
-            fill="var(--color-success)"
-            className="flow-dot"
-            style={{
-              offsetPath: `path("${f.d}")`,
-              ["--flow-dur" as string]: f.dur,
-              ["--flow-delay" as string]: f.delay,
-            }}
-          />
-        </g>
-      ))}
-    </svg>
+    </div>
   );
 }
 
 function Phone() {
   const c = 2 * Math.PI * 52;
-  const offset = c * (1 - 0.84);
+  const offset = c * (1 - 0.81);
   return (
     <PhoneFrame
-      className="absolute top-0 left-1/2 aspect-[370/756] w-[min(370px,74vw)] -translate-x-1/2 shadow-device md:-translate-x-[62%]"
+      className="absolute top-0 left-1/2 z-20 aspect-[370/756] w-[min(370px,74vw)] -translate-x-1/2 shadow-device md:-translate-x-[62%]"
       screenClassName="bg-linear-to-b from-[#d8eef8] to-bg"
     >
       {/* Content fills the full device height — at 756px a short screen leaves an
@@ -184,8 +122,8 @@ function Phone() {
         </div>
 
         <div className="text-center">
-          <div className="text-sm font-semibold text-muted">Recovery</div>
-          <div className="text-xs text-muted">March 12, 2026</div>
+          <div className="text-sm font-semibold text-muted">Energy balance</div>
+          <div className="text-xs text-muted">Today</div>
           <svg viewBox="0 0 140 140" className="mx-auto mt-1 size-32">
             <circle cx="70" cy="70" r="52" fill="none" stroke="rgba(31,32,37,0.1)" strokeWidth="10" />
             <circle
@@ -204,28 +142,29 @@ function Phone() {
                 strokeDasharray: c,
               }}
             />
-            <text x="70" y="68" textAnchor="middle" className="fill-fg" style={{ fontSize: 28, fontWeight: 800 }}>
-              84
+            <text x="70" y="68" textAnchor="middle" className="fill-fg" style={{ fontSize: 26, fontWeight: 800 }}>
+              −420
             </text>
-            <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 11, fontWeight: 600 }}>
-              Good
+            <text x="70" y="88" textAnchor="middle" className="fill-muted" style={{ fontSize: 10, fontWeight: 600 }}>
+              KCAL DEFICIT
             </text>
           </svg>
         </div>
 
         <div className="mt-1 grid grid-cols-2 gap-2">
-          <Mini label="Sleep" value="7h 20m" />
-          <Mini label="Steps" value="6,240" />
+          <Mini label="Calories in" value="1,850" />
+          <Mini label="Calories out" value="2,270" />
         </div>
 
         <p className="mt-2 rounded-md bg-surface/80 p-3 text-[12px] leading-snug font-normal text-muted">
-          The 7h 20m of sleep you had last night significantly improved your HRV baseline.
+          You slept 7h 20m and recovered well — add 24g of protein at dinner and a 30-min zone 2 walk to hit today's
+          target.
         </p>
 
         <div className="mt-2 rounded-md bg-surface/80 p-3">
           <div className="flex items-center justify-between text-[10px] font-semibold tracking-wide text-muted uppercase">
             <span>This week</span>
-            <span className="text-success">+12%</span>
+            <span className="text-success">6 of 7 on target</span>
           </div>
           <div className="mt-2 flex h-14 items-end gap-1.5">
             {[32, 48, 38, 64, 45, 76, 100].map((h, i) => (
@@ -239,9 +178,9 @@ function Phone() {
         </div>
 
         <div className="mt-2 grid grid-cols-3 gap-2">
-          <Tile label="HRV" value="92" tone="text-hrv" />
-          <Tile label="Strain" value="40" tone="text-strain" />
-          <Tile label="SpO₂" value="98%" tone="text-oxy" />
+          <Tile label="Sleep" value="7h 20m" tone="text-sleep" />
+          <Tile label="Steps" value="6,240" tone="text-steps" />
+          <Tile label="Protein" value="96g" tone="text-cal" />
         </div>
 
         <div className="mt-auto flex items-center justify-around pt-3 text-muted">
@@ -273,131 +212,123 @@ function Tile({ label, value, tone }: { label: string; value: string; tone: stri
   );
 }
 
-// function Watch() {
-//   const [clock, setClock] = useState("10:09");
-//   useEffect(() => {
-//     const tick = () =>
-//       setClock(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }));
-//     tick();
-//     const id = window.setInterval(tick, 1000);
-//     return () => window.clearInterval(id);
-//   }, []);
-//   return (
-//     <div className="float-b absolute top-[18%] left-[52%] z-10 hidden w-[218px] rounded-[44px] bg-[#1a1c1e] p-2.5 shadow-device md:block">
-//       <div className="rounded-[36px] bg-black px-4 py-5 text-center text-white">
-//         <div className="text-[12px] font-semibold opacity-70">{clock}</div>
-//         <div className="mt-3 grid grid-cols-3 gap-1 font-display text-xl font-extrabold">
-//           <span className="text-strain">40</span>
-//           <span className="text-success">84</span>
-//           <span className="text-hrv">92</span>
-//         </div>
-//         <div className="mt-1 text-[10px] tracking-wide text-white/50 uppercase">Stress · Rec · Sleep</div>
-//         <div className="mt-4 rounded-md bg-[#2a1010] px-3 py-2.5 text-left">
-//           <div className="text-[10px] text-white/60">Resting HR</div>
-//           <div className="font-display text-2xl font-bold">58 bpm</div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+/**
+ * Three lanes, each carrying one data-to-insight pair along a single arc. A raw
+ * reading drifts in from the left, descends and is occluded by the device; a beat
+ * later its interpretation emerges from behind the right edge on the mirrored arc.
+ * Same trajectory, transformed content — that conversion is the claim the hero makes,
+ * so the cards have to carry it rather than sit still at the margins.
+ *
+ * Lanes are staggered by a third of the cycle, so a pair is always mid-flight.
+ */
+type CardFace = {
+  icon: typeof Moon;
+  tone: string;
+  title: string;
+  detail: string;
+};
 
-const CHIPS = [
+type Lane = {
+  /** Vertical start of the inbound card, as a share of the 756px stage. */
+  top: string;
+  delay: string;
+  data: CardFace;
+  insight: CardFace;
+};
+
+/** Equal travel in both directions, so the two halves read at one speed. */
+const CARD_DX = 520;
+const CARD_DY = 260;
+/**
+ * The inbound card starts only just off the stage. Further out and it spends its
+ * fade-in beyond the hero's own clip edge, which shows as a half card pinned to the
+ * left of the viewport rather than one arriving. The outbound card starts wholly
+ * behind the device: 32% of 1100 is 352, and at 238px wide its right edge lands at
+ * 590, inside the 318-690 the device occupies.
+ */
+const IN_START = "-14%";
+const OUT_START = "32%";
+/** CARD_DY as a share of the 756px stage — where the inbound card handed off. */
+const OUT_DROP = "34.4%";
+
+const LANES: Lane[] = [
   {
+    top: "4%",
     delay: "0s",
-    pos: "left-[1%] top-[12%]",
-    icon: Droplets,
-    tone: "bg-oxy/15 text-oxy",
-    body: (
-      <>
-        Hydration
-        <span className="block text-[12px] font-normal text-muted">1.2L / 2L</span>
-      </>
-    ),
+    data: { icon: UtensilsCrossed, tone: "bg-cal/15 text-cal", title: "Lunch logged", detail: "620 kcal · 42g protein" },
+    insight: {
+      icon: Sparkles,
+      tone: "bg-steps/15 text-steps",
+      title: "Dinner target",
+      detail: "620 kcal · +24g protein",
+    },
   },
   {
-    delay: "3s",
-    pos: "left-[3%] top-[42%]",
-    icon: Heart,
-    tone: "bg-heart/15 text-heart",
-    body: (
-      <>
-        Resting HR
-        <span className="block text-[12px] font-normal text-muted">58 bpm · steady</span>
-      </>
-    ),
+    top: "20%",
+    delay: "-7s",
+    data: { icon: Moon, tone: "bg-sleep/15 text-sleep", title: "Sleep", detail: "7h 20m · 1h 40m deep" },
+    insight: {
+      icon: TrendingUp,
+      tone: "bg-steps/15 text-steps",
+      title: "Recovery 84",
+      detail: "Cleared for hard training",
+    },
   },
   {
-    delay: "6s",
-    pos: "right-[1%] top-[8%]",
-    icon: Sparkles,
-    tone: "bg-primary/15 text-primary",
-    body: (
-      <>
-        AI Insight
-        <span className="mt-1 block max-w-[180px] text-[12px] leading-snug font-normal text-muted">
-          Your recovery score is trending up.
-        </span>
-      </>
-    ),
+    top: "36%",
+    delay: "-14s",
+    data: { icon: Watch, tone: "bg-primary/15 text-primary", title: "Watch synced", detail: "Run 5.2km · 480 kcal" },
+    insight: { icon: Flame, tone: "bg-steps/15 text-steps", title: "Net balance", detail: "−420 kcal · on target" },
   },
-  {
-    delay: "9s",
-    pos: "right-[2%] top-[40%]",
-    icon: Flame,
-    tone: "bg-cal/15 text-cal",
-    body: (
-      <>
-        Calories
-        <span className="block text-[12px] font-normal text-muted">1,850 kcal</span>
-      </>
-    ),
-  },
-  {
-    delay: "12s",
-    pos: "left-[5%] top-[70%]",
-    icon: Moon,
-    tone: "bg-sleep/15 text-sleep",
-    body: (
-      <>
-        Sleep Duration
-        <span className="block text-[12px] font-normal text-muted">7h 20m · Optimal</span>
-      </>
-    ),
-  },
-  {
-    delay: "15s",
-    pos: "right-[6%] top-[68%]",
-    icon: Footprints,
-    tone: "bg-steps/15 text-steps",
-    body: (
-      <>
-        Daily Steps
-        <span className="block text-[12px] font-normal text-muted">6,240 / 10k</span>
-      </>
-    ),
-  },
-] as const;
+];
 
-function Chips() {
+function Card({ face, className, style }: { face: CardFace; className: string; style: CSSProperties }) {
+  const Icon = face.icon;
+  return (
+    <div
+      className={`pointer-events-none absolute z-10 hidden w-[238px] items-center gap-3 rounded-pill border border-white/70 bg-surface/90 px-3 py-2 text-[13px] font-semibold shadow-card backdrop-blur lg:flex ${className}`}
+      style={style}
+    >
+      <span className={`grid size-8 shrink-0 place-items-center rounded-full ${face.tone}`}>
+        <Icon className="size-4" />
+      </span>
+      <span className="min-w-0">
+        {face.title}
+        <span className="block truncate text-[12px] font-normal text-muted">{face.detail}</span>
+      </span>
+    </div>
+  );
+}
+
+function FlowCards() {
+  const travel = {
+    ["--card-dx" as string]: `${CARD_DX}px`,
+    ["--card-dy" as string]: `${CARD_DY}px`,
+  };
   return (
     <>
-      {CHIPS.map((c) => {
-        const Icon = c.icon;
-        return (
-          <div
-            key={c.delay}
-            className={`chip-cycle pointer-events-none absolute z-20 hidden items-center gap-3 rounded-pill border border-white/70 bg-surface/90 px-3 py-2 text-[13px] font-semibold shadow-card backdrop-blur lg:flex ${c.pos}`}
-            style={{ animationDelay: c.delay }}
-          >
-            <span className={`grid size-8 place-items-center rounded-full ${c.tone}`}>
-              <Icon className="size-4" />
-            </span>
-            <span>{c.body}</span>
-          </div>
-        );
-      })}
+      {LANES.map((lane) => (
+        <Fragment key={lane.top}>
+          <Card
+            face={lane.data}
+            className="card-in"
+            style={{ ...travel, left: IN_START, top: lane.top, animationDelay: lane.delay }}
+          />
+          <Card
+            face={lane.insight}
+            className="card-out"
+            style={{
+              ...travel,
+              ["--card-dy" as string]: `${-CARD_DY}px`,
+              left: OUT_START,
+              top: `calc(${lane.top} + ${OUT_DROP})`,
+              animationDelay: lane.delay,
+            }}
+          />
+        </Fragment>
+      ))}
       <div className="pointer-events-none absolute top-[6%] left-2 z-20 flex items-center gap-2 rounded-pill bg-surface/90 px-3 py-2 text-[12px] font-semibold shadow-card lg:hidden">
-        <Activity className="size-3.5 text-hrv" /> HRV trending up
+        <Flame className="size-3.5 text-cal" /> 420 kcal under target
       </div>
     </>
   );

@@ -17,6 +17,7 @@
   --color-danger: #ba1a1a;
   --color-sleep: #8c7ae6;
   --color-strain: #f46c41;
+  --color-temp: #e8833a;
   --color-heart: #ff5252;
   --color-hrv: #00cec9;
   --color-steps: #00b894;
@@ -45,6 +46,46 @@
   --shadow-device: 0 40px 80px color-mix(in oklab, #1f2025 22%, transparent);
 
   --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Three content rails, and only three. Every section picks one of these rather
+     than inventing its own max-width — the page had seven before. */
+  /* Not named "prose": Tailwind ships its own max-w-prose (65ch) that shadows a
+     --container-prose token, so the rail would silently resolve to 713px. */
+  --container-narrow: 42rem; /* 672px — section intros, anything read as prose */
+  --container-content: 72rem; /* 1152px — the default content rail */
+  --container-wide: 112.5rem; /* 1800px — slabs and scrollers that bleed wide */
+}
+
+@layer components {
+  /* The one section shell. Horizontal gutter is fixed at every width; the vertical
+     rhythm steps up twice. Sections that opt out of this are the exception and
+     should say why. */
+  .section {
+    padding-inline: 1.5rem;
+    padding-block: 5rem;
+  }
+
+  @media (width >= 40rem) {
+    .section {
+      padding-block: 6rem;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .section {
+      padding-block: 8rem;
+    }
+  }
+
+  /* Small uppercase label above a section heading. Colour stays a utility, because
+     it is the only thing that legitimately varies between light and dark sections. */
+  .eyebrow {
+    margin-bottom: 0.75rem;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 }
 
 @layer base {
@@ -161,44 +202,6 @@
   animation: wave 1s ease-in-out infinite alternate;
 }
 
-@keyframes cloud-pan {
-  from {
-    transform: scale(1.08) translate3d(-2%, 0, 0);
-  }
-  to {
-    transform: scale(1.08) translate3d(2%, 0, 0);
-  }
-}
-
-.sky-pan {
-  animation: cloud-pan 40s ease-in-out infinite alternate;
-}
-
-@keyframes chip-in-out {
-  0%,
-  6% {
-    opacity: 0;
-    transform: translateY(14px) scale(0.96);
-    filter: blur(6px);
-  }
-  12%,
-  22% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-  30%,
-  100% {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.98);
-    filter: blur(4px);
-  }
-}
-
-.chip-cycle {
-  animation: chip-in-out 18s var(--ease-out-smooth) infinite;
-}
-
 @keyframes spark {
   from {
     stroke-dashoffset: 80;
@@ -206,55 +209,6 @@
   to {
     stroke-dashoffset: 0;
   }
-}
-
-/* Hero flow field: readings travelling into the device, insights travelling out.
-   The reference gets this look from baked video; we have no footage, so it is
-   drawn as SVG paths with a dot riding each one via offset-path. */
-@keyframes flow-travel {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  12% {
-    opacity: 1;
-  }
-  82% {
-    opacity: 1;
-  }
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-.flow-dot {
-  offset-rotate: 0deg;
-  animation: flow-travel var(--flow-dur, 5s) linear infinite;
-  animation-delay: var(--flow-delay, 0s);
-}
-
-/* The global reduce block clamps duration rather than cancelling, which would leave
-   each dot parked at its path origin. Drop them and keep the static strands. */
-@media (prefers-reduced-motion: reduce) {
-  .flow-dot {
-    display: none;
-  }
-}
-
-@keyframes flow-dash {
-  to {
-    stroke-dashoffset: -28;
-  }
-}
-
-.flow-line {
-  animation: flow-dash 1.9s linear infinite;
-}
-
-/* Outbound strands drift the other way so the two directions stay legible. */
-.flow-line-out {
-  animation: flow-dash 1.9s linear infinite reverse;
 }
 
 @keyframes ring-fill {
@@ -457,3 +411,118 @@
   animation: screen-swap 12s var(--ease-out-smooth) infinite;
 }
 
+
+/* Hero aurora: the atmospheric layer the strands sit inside. bevel bakes this into a
+   6s video, so it can afford real light; we approximate it with a few very large,
+   heavily blurred gradient fields on long, offset drift periods. Blur is unavoidable
+   here — it is the whole effect — which is why this is the one place the no-blur rule
+   in the design system does not apply. */
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(-50%, var(--aurora-from), 0);
+  }
+  to {
+    transform: translate3d(-50%, var(--aurora-to), 0);
+  }
+}
+
+.aurora-band {
+  animation: aurora-drift var(--aurora-dur, 48s) ease-in-out infinite alternate;
+  animation-delay: var(--aurora-delay, 0s);
+  will-change: transform;
+}
+
+/* The drift is the point; parked bands still read as a sky. */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-band {
+    animation: none;
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Hero cards: a reading drifts in from the left, is absorbed by the device, and its
+   interpretation leaves on the mirrored arc. Both halves share one 21s cycle and one
+   delay per lane, so the handoff always reads as the same object being transformed —
+   in during the first 45%, out during the second.
+
+   The arc is traced with keyframe stops rather than offset-path: these are HTML cards
+   in a stage whose width varies with the viewport, and a px path would not stretch
+   with it the way the SVG field does. Timing is linear because the stops already
+   carry the curve; easing each segment would make the travel lurch. */
+@keyframes card-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.92);
+  }
+  5% {
+    opacity: 1;
+  }
+  16% {
+    transform: translate3d(calc(var(--card-dx) * 0.36), calc(var(--card-dy) * 0.14), 0) scale(0.97);
+  }
+  30% {
+    transform: translate3d(calc(var(--card-dx) * 0.68), calc(var(--card-dy) * 0.5), 0) scale(1);
+  }
+  38% {
+    opacity: 1;
+  }
+  45%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--card-dx), var(--card-dy), 0) scale(0.9);
+  }
+}
+
+@keyframes card-out {
+  0%,
+  45% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.9);
+  }
+  52% {
+    opacity: 1;
+  }
+  62% {
+    transform: translate3d(calc(var(--card-dx) * 0.32), calc(var(--card-dy) * 0.5), 0) scale(1);
+  }
+  76% {
+    transform: translate3d(calc(var(--card-dx) * 0.64), calc(var(--card-dy) * 0.86), 0) scale(1);
+  }
+  86% {
+    opacity: 1;
+  }
+  93%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--card-dx), var(--card-dy), 0) scale(0.96);
+  }
+}
+
+.card-in {
+  animation: card-in 21s linear infinite;
+}
+
+.card-out {
+  animation: card-out 21s linear infinite;
+}
+
+/* The global reduce block would park every card on its last keyframe, which is
+   opacity 0. Cancel the travel instead and hold each one mid-arc, so the pairing
+   still reads: data to the left of the device, insight to its right. */
+@media (prefers-reduced-motion: reduce) {
+  .card-in,
+  .card-out {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* Parked clear of the device on either side, not under it: at 238px wide the
+     inbound card has to stop before stage x 318 and the outbound one after 690. */
+  .card-in {
+    transform: translate3d(calc(var(--card-dx) * 0.42), calc(var(--card-dy) * 0.22), 0);
+  }
+
+  .card-out {
+    transform: translate3d(calc(var(--card-dx) * 0.72), calc(var(--card-dy) * 0.84), 0);
+  }
+}
