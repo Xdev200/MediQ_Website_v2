@@ -306,17 +306,18 @@ export function PinnedPhoneScroller() {
   return (
     <section
       id="how-it-works"
-      className="scroll-mt-24 bg-ink px-4 py-6 lg:px-8 lg:py-8"
+      /* The vertical padding here is the dark frame around the rounded cards, not
+         section rhythm — that comes from the intro block below. Only the gutter is
+         aligned to the page. */
+      className="scroll-mt-24 bg-ink px-6 py-6 lg:py-8"
     >
-      <div className="mx-auto max-w-[1800px]">
-        <div className="mx-auto max-w-2xl px-2 py-14 text-center text-white lg:py-20">
-          <p className="mb-3 text-[13px] font-semibold tracking-[0.1em] text-white/45 uppercase">
-            Onboarding
-          </p>
+      <div className="mx-auto max-w-wide">
+        <div className="mx-auto max-w-narrow py-14 text-center text-white lg:py-20">
+          <p className="eyebrow text-white/55">Onboarding</p>
           <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-extrabold text-white">
             Ready in minutes
           </h2>
-          <p className="mx-auto mt-4 max-w-[40ch] text-lg font-normal text-white/55">
+          <p className="mx-auto mt-4 max-w-[46ch] text-lg font-normal text-white/55">
             Four steps from installing the app to acting on what your own data
             says.
           </p>
@@ -338,7 +339,7 @@ function PanelCard({ panel }: { panel: Panel }) {
   return (
     <article
       ref={ref}
-      className="relative flex flex-col justify-center px-6 py-12 lg:h-[var(--card-h)] lg:px-[6%] lg:py-0"
+      className="relative flex flex-col justify-center px-6 py-12 lg:h-[var(--card-h)] lg:px-20 lg:py-0"
       style={{
         background: panel.bg,
         // Clips the fixed device below to this card while leaving it positioned
@@ -347,20 +348,20 @@ function PanelCard({ panel }: { panel: Panel }) {
         ["--card-h" as string]: CARD_HEIGHT,
       }}
     >
-      <div className="relative z-10 w-full lg:max-w-[46%]">
+      <div className="relative z-10 w-full text-center lg:max-w-[46%] lg:text-left">
         {panel.eyebrow ? (
-          <p className="mb-4 inline-flex rounded-pill bg-ink/8 px-3.5 py-1.5 text-[12px] font-bold tracking-[0.1em] text-fg/70 uppercase">
+          <p className="eyebrow inline-flex rounded-pill bg-ink/8 px-3.5 py-1.5 text-fg/70">
             {panel.eyebrow}
           </p>
         ) : null}
-        <h3 className="font-display text-[clamp(2.4rem,5vw,4.2rem)] leading-[0.98] font-extrabold tracking-[-0.04em]">
+        <h3 className="font-display text-[clamp(2rem,3.4vw,2.6rem)] leading-[0.98] font-extrabold tracking-[-0.04em]">
           {panel.title}
         </h3>
-        <p className="mt-5 max-w-[46ch] text-lg leading-relaxed font-normal text-muted">
+        <p className="mx-auto mt-5 max-w-[46ch] text-base leading-relaxed font-normal text-muted sm:text-lg lg:mx-0">
           {panel.body}
         </p>
         {panel.bullets.length ? (
-          <ul className="mt-6 max-w-xl space-y-3">
+          <ul className="mx-auto mt-6 max-w-xl space-y-3 text-left lg:mx-0">
             {panel.bullets.map((b) => (
               <li
                 key={b.title}
@@ -393,10 +394,15 @@ function PhoneLayer({
   floats: Float[];
 }) {
   return (
-    <div className="relative mx-auto mt-10 aspect-[370/756] w-[min(300px,70vw)] lg:pointer-events-none lg:fixed lg:inset-0 lg:mt-0 lg:aspect-auto lg:w-auto">
+    <div className="relative mx-auto mt-10 aspect-[370/756] w-[min(300px,80vw)] lg:pointer-events-none lg:fixed lg:inset-0 lg:mt-0 lg:aspect-auto lg:w-auto">
       <div
-        className="relative h-full w-full lg:absolute lg:top-1/2 lg:aspect-[370/756] lg:h-[var(--phone-h)] lg:w-auto lg:-translate-y-1/2"
-        style={{ right: PHONE_RIGHT, ["--phone-h" as string]: PHONE_HEIGHT }}
+        // `right` belongs to the fixed layout alone: on the stacked mobile card it
+        // dragged the device out from under the copy and into the card's clip edge.
+        className="relative h-full w-full lg:absolute lg:top-1/2 lg:right-[var(--phone-right)] lg:aspect-[370/756] lg:h-[var(--phone-h)] lg:w-auto lg:-translate-y-1/2"
+        style={{
+          ["--phone-right" as string]: PHONE_RIGHT,
+          ["--phone-h" as string]: PHONE_HEIGHT,
+        }}
       >
         <IPhone screen={screen} />
         {floats.map((f, i) => (
@@ -418,12 +424,16 @@ function PhoneLayer({
 function IPhone({ screen }: { screen: ScreenKey }) {
   return (
     <PhoneFrame className="h-full w-full">
-      <StatusBar />
-      {screen === "store" ? <ScreenStore /> : null}
-      {screen === "profile" ? <ScreenProfile /> : null}
-      {screen === "home" ? <ScreenHome /> : null}
-      {screen === "chat" ? <ScreenChat /> : null}
-      {screen === "extras" ? <ScreenExtras /> : null}
+      {/* The screens are drawn for the full-size 370px device. The stacked mobile
+          layout shows a smaller one, so the whole UI is zoomed down to match. */}
+      <div className="absolute inset-0 [zoom:0.8] lg:[zoom:1]">
+        <StatusBar />
+        {screen === "store" ? <ScreenStore /> : null}
+        {screen === "profile" ? <ScreenProfile /> : null}
+        {screen === "home" ? <ScreenHome /> : null}
+        {screen === "chat" ? <ScreenChat /> : null}
+        {screen === "extras" ? <ScreenExtras /> : null}
+      </div>
       <div className="absolute bottom-2 left-1/2 z-30 h-[5px] w-32 -translate-x-1/2 rounded-full bg-black/80" />
     </PhoneFrame>
   );

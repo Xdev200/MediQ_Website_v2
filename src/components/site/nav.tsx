@@ -46,7 +46,7 @@ export function SiteNav() {
 
         <button
           type="button"
-          className="mr-1 inline-flex size-11 items-center justify-center rounded-md md:hidden"
+          className="inline-flex size-11 items-center justify-center rounded-md md:hidden"
           aria-expanded={open}
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
