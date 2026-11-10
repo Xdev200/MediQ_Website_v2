@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { LegalPage } from "@/components/site/legal";
 import type { LegalSection } from "@/components/site/legal";
@@ -31,6 +31,9 @@ const SECTIONS: LegalSection[] = [
         <p>
           By using the App, you consent to the collection and use of information in accordance with this policy. If you
           do not agree with the terms of this Privacy Policy, please do not access or use the App.
+        </p>
+        <p>
+          Using FitLog, our gym member app? See the <Link to="/fitlog/privacy">FitLog Privacy Policy</Link>.
         </p>
       </>
     ),
