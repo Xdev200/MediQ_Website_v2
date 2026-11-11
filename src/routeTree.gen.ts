@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as FitlogDeleteAccountRouteImport } from './routes/fitlog.delete-account'
 import { Route as FitlogPrivacyRouteImport } from './routes/fitlog.privacy'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FitlogDeleteAccountRoute = FitlogDeleteAccountRouteImport.update({
+  id: '/fitlog/delete-account',
+  path: '/fitlog/delete-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FitlogPrivacyRoute = FitlogPrivacyRouteImport.update({
   id: '/fitlog/privacy',
   path: '/fitlog/privacy',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/fitlog/delete-account': typeof FitlogDeleteAccountRoute
   '/fitlog/privacy': typeof FitlogPrivacyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/fitlog/delete-account': typeof FitlogDeleteAccountRoute
   '/fitlog/privacy': typeof FitlogPrivacyRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,29 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/fitlog/delete-account': typeof FitlogDeleteAccountRoute
   '/fitlog/privacy': typeof FitlogPrivacyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/privacy' | '/terms' | '/fitlog/privacy'
+  fullPaths:
+    '/' | '/privacy' | '/terms' | '/fitlog/delete-account' | '/fitlog/privacy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/privacy' | '/terms' | '/fitlog/privacy'
-  id: '__root__' | '/' | '/privacy' | '/terms' | '/fitlog/privacy'
+  to: '/' | '/privacy' | '/terms' | '/fitlog/delete-account' | '/fitlog/privacy'
+  id:
+    | '__root__'
+    | '/'
+    | '/privacy'
+    | '/terms'
+    | '/fitlog/delete-account'
+    | '/fitlog/privacy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  FitlogDeleteAccountRoute: typeof FitlogDeleteAccountRoute
   FitlogPrivacyRoute: typeof FitlogPrivacyRoute
 }
 
@@ -92,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fitlog/delete-account': {
+      id: '/fitlog/delete-account'
+      path: '/fitlog/delete-account'
+      fullPath: '/fitlog/delete-account'
+      preLoaderRoute: typeof FitlogDeleteAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fitlog/privacy': {
       id: '/fitlog/privacy'
       path: '/fitlog/privacy'
@@ -106,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  FitlogDeleteAccountRoute: FitlogDeleteAccountRoute,
   FitlogPrivacyRoute: FitlogPrivacyRoute,
 }
 export const routeTree = rootRouteImport
