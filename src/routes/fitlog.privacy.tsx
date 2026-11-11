@@ -184,16 +184,22 @@ const SECTIONS: LegalSection[] = [
         <p>We keep your data while your account is open.</p>
         <p>To delete your account and all of its data, either:</p>
         <ul>
-          <li>open the MediQ app and choose Delete account in its settings, or</li>
+          <li>
+            in FitLog, open the <strong>Profile</strong> tab and tap <strong>Delete account</strong> at the bottom, or
+          </li>
           <li>
             email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> from the address on your account with the
             subject "Delete my FitLog account".
           </li>
         </ul>
         <p>
-          FitLog and MediQ share one account, so deleting it removes your data from both apps. We complete email
-          requests within 30 days and confirm by email. Payment records that the law requires us to keep are kept only
-          for as long as it requires. You can also ask us for a copy of your data at the same address.
+          FitLog and MediQ share one account, so deleting it removes your data from both apps. In-app deletion is
+          immediate. We complete email requests within 30 days and confirm by email. You can also ask us for a copy of
+          your data at the same address.
+        </p>
+        <p>
+          <Link to="/fitlog/delete-account">Deleting your FitLog account</Link> gives the full steps and lists exactly
+          what is deleted and what is kept.
         </p>
       </>
     ),
@@ -238,7 +244,7 @@ function FitLogPrivacyPage() {
   return (
     <LegalPage
       title="FitLog Privacy Policy"
-      updated="November 10, 2026"
+      updated="November 11, 2026"
       lead="What the FitLog gym app collects, what your gym can see, and how to delete it."
       icon={Dumbbell}
       wash="from-wash to-wash-lilac"
